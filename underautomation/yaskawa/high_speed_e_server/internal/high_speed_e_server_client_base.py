@@ -104,7 +104,7 @@ class HighSpeedEServerClientBase:
 		return RobotDataHeader(self._instance.Write16BytesChar(firstIndex, data))
 	def read_position_variable(self, firstIndex: int, count: int) -> RobotPluralData1[RobotPositionData1[int]]:
 		return RobotPluralData1[RobotPositionData1[int]](self._instance.ReadPositionVariable(firstIndex, count))
-	def write_position_variable(self, firstIndex: int, data: typing.List[RobotPositionData`1]) -> RobotDataHeader:
+	def write_position_variable(self, firstIndex: int, data: typing.List[RobotPositionData1]) -> RobotDataHeader:
 		return RobotDataHeader(self._instance.WritePositionVariable(firstIndex, data._instance))
 	def read_base_position(self, firstIndex: int, count: int) -> RobotPluralData1[RobotBasePositionData]:
 		return RobotPluralData1[RobotBasePositionData](self._instance.ReadBasePosition(firstIndex, count))
@@ -112,7 +112,7 @@ class HighSpeedEServerClientBase:
 		return RobotDataHeader(self._instance.WriteBasePosition(firstIndex, data._instance))
 	def read_external_position(self, firstIndex: int, count: int) -> RobotPluralData1[RobotAxisRawData1[int]]:
 		return RobotPluralData1[RobotAxisRawData1[int]](self._instance.ReadExternalPosition(firstIndex, count))
-	def write_external_position(self, firstIndex: int, data: typing.List[RobotAxisRawData`1]) -> RobotDataHeader:
+	def write_external_position(self, firstIndex: int, data: typing.List[RobotAxisRawData1]) -> RobotDataHeader:
 		return RobotDataHeader(self._instance.WriteExternalPosition(firstIndex, data._instance))
 	def get_alarm_extended(self, alarm: RobotRecentAlarm) -> RobotAlarmDataExtended:
 		return RobotAlarmDataExtended(self._instance.GetAlarmExtended(alarm._instance))

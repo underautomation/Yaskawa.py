@@ -33,15 +33,37 @@ Ideal for automation, research, and integration projects, it provides high-speed
 
 **No Yaskawa options or additional hardware required.**
 
+## Try it
+
+From Pypi (available soon) :
+
+```
+pip install UnderAutomation.UniversalRobots
+```
+
+From this repo :
+
+```
+git clone https://github.com/underautomation/Yaskawa.py.git
+pip install pythonnet==3.0.3
+```
+
 ---
 
 ## ✨ Example Usage (Python)
 
 ```python
-from underautomation.yaskawa import YaskawaRobot
+from underautomation.yaskawa.connect_parameters import ConnectParameters
+from underautomation.yaskawa.high_speed_e_server.alarm_reset_type import AlarmResetType
+from underautomation.yaskawa.yaskawa_robot import YaskawaRobot
+
 
 robot = YaskawaRobot()
-robot.connect("192.168.0.1")
+parameters = ConnectParameters("192.168.0.1")
+parameters.ping_before_connect = True
+
+robot.connect(parameters)
+
 
 # Check connection
 if robot.high_speed_e_server.connected:
@@ -63,7 +85,7 @@ reg = robot.high_speed_e_server.read_register(10, count=2)
 robot.high_speed_e_server.write_register(10, [1234, 5678])
 
 # Reset alarm
-robot.high_speed_e_server.alarm_reset(AlarmResetType.reset)
+robot.high_speed_e_server.alarm_reset(AlarmResetType.Reset)
 ```
 
 ---
@@ -98,15 +120,15 @@ robot.high_speed_e_server.alarm_reset(AlarmResetType.reset)
 
 ```bash
 git clone https://github.com/underautomation/yaskawa.py.git
+pip install pythonnet==3.0.5
 ```
 
 ### 2. Connect to your robot
 
 ```python
-from yaskawa import YaskawaRobot
-
 robot = YaskawaRobot()
-robot.connect("192.168.0.1")
+parameters = ConnectParameters("192.168.0.1")
+robot.connect(parameters)
 ```
 
 ---
