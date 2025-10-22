@@ -9,6 +9,7 @@ import os
 clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotPosture as robot_posture
 
+T = typing.TypeVar('T')
 class RobotPosture:
 	def __init__(self, form: int, extendedForm: int, _internal = 0):
 		if(_internal == 0):

@@ -120,7 +120,8 @@ robot.high_speed_e_server.alarm_reset(AlarmResetType.Reset)
 
 ```bash
 git clone https://github.com/underautomation/yaskawa.py.git
-pip install pythonnet==3.0.5
+cd yaskawa.py
+pip install -e .
 ```
 
 ### 2. Connect to your robot

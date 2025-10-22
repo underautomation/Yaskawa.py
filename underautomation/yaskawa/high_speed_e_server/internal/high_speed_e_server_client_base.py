@@ -30,6 +30,7 @@ import os
 clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
 from UnderAutomation.Yaskawa.HighSpeedEServer.Internal import HighSpeedEServerClientBase as high_speed_e_server_client_base
 
+T = typing.TypeVar('T')
 class HighSpeedEServerClientBase:
 	def __init__(self, _internal = 0):
 		if(_internal == 0):
