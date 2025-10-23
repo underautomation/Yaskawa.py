@@ -38,14 +38,14 @@ Ideal for automation, research, and integration projects, it provides high-speed
 From Pypi (available soon) :
 
 ```
-pip install UnderAutomation.UniversalRobots
+pip install UnderAutomation.Yaskawa
 ```
 
 From this repo :
 
 ```
 git clone https://github.com/underautomation/Yaskawa.py.git
-pip install pythonnet==3.0.3
+pip install -e .
 ```
 
 ---
