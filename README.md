@@ -35,7 +35,7 @@ Ideal for automation, research, and integration projects, it provides high-speed
 
 ## Try it
 
-From Pypi (available soon) :
+From Pypi :
 
 ```
 pip install UnderAutomation.Yaskawa
