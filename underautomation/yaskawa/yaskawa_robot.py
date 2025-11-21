@@ -14,7 +14,7 @@ class YaskawaRobot:
 		else:
 			self._instance = _internal
 	def connect(self, parameters: ConnectParameters) -> None:
-		self._instance.Connect(parameters._instance)
+		self._instance.Connect(parameters._instance if parameters else None)
 	@staticmethod
 	def register_license(Licensee: str, key: str) -> LicenseInfo:
 		return LicenseInfo(None, None, yaskawa_robot.RegisterLicense(Licensee, key))

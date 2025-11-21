@@ -38,7 +38,7 @@ class HighSpeedEServerClientBase:
 		else:
 			self._instance = _internal
 	def connect(self, ip: str, parameters: HighSpeedEServerConnectParametersBase) -> None:
-		self._instance.Connect(ip, parameters._instance)
+		self._instance.Connect(ip, parameters._instance if parameters else None)
 	def close(self) -> None:
 		self._instance.Close()
 	def get_alarm(self, alarm: RobotRecentAlarm) -> RobotAlarmData:
@@ -48,17 +48,17 @@ class HighSpeedEServerClientBase:
 	def get_executing_job_information(self) -> RobotJobData:
 		return RobotJobData(self._instance.GetExecutingJobInformation())
 	def get_configuration_information(self, type: RobotControlGroup) -> RobotAxisRawData1[str]:
-		return RobotAxisRawData1[str](self._instance.GetConfigurationInformation(type._instance))
+		return RobotAxisRawData1[str](self._instance.GetConfigurationInformation(type._instance if type else None))
 	def get_robot_cartesian_position(self) -> RobotPositionCartesianData:
 		return RobotPositionCartesianData(self._instance.GetRobotCartesianPosition())
 	def get_robot_joint_position(self) -> RobotPositionData1[int]:
 		return RobotPositionData1[int](None, self._instance.GetRobotJointPosition())
 	def get_robot_position(self, type: RobotControlGroup) -> RobotPositionData1[int]:
-		return RobotPositionData1[int](None, self._instance.GetRobotPosition(type._instance))
+		return RobotPositionData1[int](None, self._instance.GetRobotPosition(type._instance if type else None))
 	def get_position_error(self, type: RobotControlGroup) -> RobotPositionData1[int]:
-		return RobotPositionData1[int](None, self._instance.GetPositionError(type._instance))
+		return RobotPositionData1[int](None, self._instance.GetPositionError(type._instance if type else None))
 	def get_torque(self, type: RobotControlGroup) -> RobotPositionData1[int]:
-		return RobotPositionData1[int](None, self._instance.GetTorque(type._instance))
+		return RobotPositionData1[int](None, self._instance.GetTorque(type._instance if type else None))
 	def alarm_reset(self, type: AlarmResetType) -> RobotDataHeader:
 		return RobotDataHeader(self._instance.AlarmReset(type))
 	def servo_command(self, command: OnOffCommandType, value: bool) -> RobotDataHeader:
@@ -74,7 +74,7 @@ class HighSpeedEServerClientBase:
 	def get_management_time(self, type: ManagementTimeType, index: int=0) -> RobotManagementTimeData:
 		return RobotManagementTimeData(self._instance.GetManagementTime(type, index))
 	def get_system_information(self, type: RobotSystemTypeData) -> RobotSystemInformation:
-		return RobotSystemInformation(self._instance.GetSystemInformation(type._instance))
+		return RobotSystemInformation(self._instance.GetSystemInformation(type._instance if type else None))
 	def read_io(self, firstIndex: int, count: int) -> RobotPluralData1[int]:
 		return RobotPluralData1[int](self._instance.ReadIO(firstIndex, count))
 	def write_io(self, firstIndex: int, data: typing.List[int]) -> RobotDataHeader:
@@ -106,20 +106,20 @@ class HighSpeedEServerClientBase:
 	def read_position_variable(self, firstIndex: int, count: int) -> RobotPluralData1[RobotPositionData1[int]]:
 		return RobotPluralData1[RobotPositionData1[int]](self._instance.ReadPositionVariable(firstIndex, count))
 	def write_position_variable(self, firstIndex: int, data: typing.List[RobotPositionData1]) -> RobotDataHeader:
-		return RobotDataHeader(self._instance.WritePositionVariable(firstIndex, data._instance))
+		return RobotDataHeader(self._instance.WritePositionVariable(firstIndex, data._instance if data else None))
 	def read_base_position(self, firstIndex: int, count: int) -> RobotPluralData1[RobotBasePositionData]:
 		return RobotPluralData1[RobotBasePositionData](self._instance.ReadBasePosition(firstIndex, count))
 	def write_base_position(self, firstIndex: int, data: typing.List[RobotBasePositionData]) -> RobotDataHeader:
-		return RobotDataHeader(self._instance.WriteBasePosition(firstIndex, data._instance))
+		return RobotDataHeader(self._instance.WriteBasePosition(firstIndex, data._instance if data else None))
 	def read_external_position(self, firstIndex: int, count: int) -> RobotPluralData1[RobotAxisRawData1[int]]:
 		return RobotPluralData1[RobotAxisRawData1[int]](self._instance.ReadExternalPosition(firstIndex, count))
 	def write_external_position(self, firstIndex: int, data: typing.List[RobotAxisRawData1]) -> RobotDataHeader:
-		return RobotDataHeader(self._instance.WriteExternalPosition(firstIndex, data._instance))
+		return RobotDataHeader(self._instance.WriteExternalPosition(firstIndex, data._instance if data else None))
 	def get_alarm_extended(self, alarm: RobotRecentAlarm) -> RobotAlarmDataExtended:
 		return RobotAlarmDataExtended(self._instance.GetAlarmExtended(alarm))
-	def move_cartesian(self, x: float, y: float, z: float, rx: float, ry: float, rz: float, classification: PositionCommandClassification, speed: float, coordinate: PositionCommandOperationCoordinate, posture: RobotPosture=None, commandtype: PositionCommandType=3, RobotControlGroup: int=1, StationControlGroup: int=0, tool: int=0, userCoordinate: int=0) -> RobotDataHeader:
-		return RobotDataHeader(self._instance.MoveCartesian(x, y, z, rx, ry, rz, classification, speed, coordinate, posture._instance, commandtype, RobotControlGroup, StationControlGroup, tool, userCoordinate))
-	def move_joints(self, axesPulse: typing.List[int], classification: PositionCommandClassification, speed: float, commandtype: PositionCommandType=3, RobotControlGroup: int=1, StationControlGroup: int=1, tool: int=0) -> RobotDataHeader:
+	def move_cartesian(self, x: float, y: float, z: float, rx: float, ry: float, rz: float, classification: PositionCommandClassification, speed: float, coordinate: PositionCommandOperationCoordinate, posture: RobotPosture=None, commandtype: PositionCommandType=PositionCommandType.StraightIncrement, RobotControlGroup: int=1, StationControlGroup: int=0, tool: int=0, userCoordinate: int=0) -> RobotDataHeader:
+		return RobotDataHeader(self._instance.MoveCartesian(x, y, z, rx, ry, rz, classification, speed, coordinate, posture._instance if posture else None, commandtype, RobotControlGroup, StationControlGroup, tool, userCoordinate))
+	def move_joints(self, axesPulse: typing.List[int], classification: PositionCommandClassification, speed: float, commandtype: PositionCommandType=PositionCommandType.StraightIncrement, RobotControlGroup: int=1, StationControlGroup: int=1, tool: int=0) -> RobotDataHeader:
 		return RobotDataHeader(self._instance.MoveJoints(axesPulse, classification, speed, commandtype, RobotControlGroup, StationControlGroup, tool))
 	def read32_bytes_char(self, firstIndex: int, count: int) -> RobotPluralData1[str]:
 		return RobotPluralData1[str](self._instance.Read32BytesChar(firstIndex, count))
