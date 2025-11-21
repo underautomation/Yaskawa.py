@@ -13,8 +13,8 @@ class RobotAxisRawData1(RobotData, typing.Generic[T]):
 		else:
 			self._instance = _internal
 	@property
-	def axes(self) -> typing.Any:
-		return self._instance.Axes
+	def axes(self) -> typing.List[T]:
+		return list(self._instance.Axes)
 	@property
 	def axis1(self) -> T:
 		return self._instance.Axis1

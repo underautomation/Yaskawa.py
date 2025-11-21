@@ -13,8 +13,8 @@ class RobotPluralData1(RobotData, typing.Generic[T]):
 		else:
 			self._instance = _internal
 	@property
-	def value(self) -> typing.Any:
-		return self._instance.Value
+	def value(self) -> typing.List[T]:
+		return list(self._instance.Value)
 	@value.setter
-	def value(self, value: typing.Any):
+	def value(self, value: typing.List[T]):
 		self._instance.Value = value
