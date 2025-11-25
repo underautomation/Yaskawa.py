@@ -30,7 +30,7 @@ import os
 clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
 from UnderAutomation.Yaskawa.HighSpeedEServer.Internal import HighSpeedEServerClientBase as high_speed_e_server_client_base
 
-T = typing.TypeVar('T')
+땒 = typing.TypeVar('땒')
 class HighSpeedEServerClientBase:
 	def __init__(self, _internal = 0):
 		if(_internal == 0):
@@ -81,7 +81,7 @@ class HighSpeedEServerClientBase:
 		return RobotDataHeader(self._instance.WriteIO(firstIndex, data))
 	def read_register(self, firstIndex: int, count: int) -> RobotPluralData1[int]:
 		return RobotPluralData1[int](self._instance.ReadRegister(firstIndex, count))
-	def write_register(self, firstIndex: int, data: typing.Any) -> RobotDataHeader:
+	def write_register(self, firstIndex: int, data: typing.List[int]) -> RobotDataHeader:
 		return RobotDataHeader(self._instance.WriteRegister(firstIndex, data))
 	def read_byte(self, firstIndex: int, count: int) -> RobotPluralData1[int]:
 		return RobotPluralData1[int](self._instance.ReadByte(firstIndex, count))
