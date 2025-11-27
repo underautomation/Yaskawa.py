@@ -12,9 +12,6 @@ class RobotSystemTypeData:
 		else:
 			self._instance = _internal
 	@property
-	def default(self) -> 'RobotSystemTypeData':
-		return RobotSystemTypeData(self._instance.Default)
-	@property
 	def index(self) -> int:
 		return self._instance.Index
 	@property
@@ -23,3 +20,5 @@ class RobotSystemTypeData:
 	@property
 	def byte(self) -> int:
 		return self._instance.Byte
+
+RobotSystemTypeData.default = RobotSystemTypeData(robot_system_type_data.Default)

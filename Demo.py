@@ -26,6 +26,12 @@ robot.high_speed_e_server.move_cartesian(
     coordinate= PositionCommandOperationCoordinate.Base
 )
 
+retval = robot.high_speed_e_server.move_joints(
+    axesPulse=[0, 0, 0, 0, 0, 0],
+    classification=PositionCommandClassification.Cartesian_MM_S,
+    speed=10
+)
+
 # Get current joint position
 joint_position = robot.high_speed_e_server.get_robot_joint_position()
 print(joint_position.axes)

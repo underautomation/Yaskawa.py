@@ -12,12 +12,6 @@ class RobotControlGroup:
 		else:
 			self._instance = _internal
 	@property
-	def default_robot_cartesian(self) -> 'RobotControlGroup':
-		return RobotControlGroup(None, None, self._instance.DefaultRobotCartesian)
-	@property
-	def default_robot_pulse(self) -> 'RobotControlGroup':
-		return RobotControlGroup(None, None, self._instance.DefaultRobotPulse)
-	@property
 	def group(self) -> ControlGroup:
 		return ControlGroup(self._instance.Group)
 	@property
@@ -26,3 +20,7 @@ class RobotControlGroup:
 	@property
 	def byte_value(self) -> int:
 		return self._instance.ByteValue
+
+RobotControlGroup.default_robot_cartesian = RobotControlGroup(None, None, robot_control_group.DefaultRobotCartesian)
+
+RobotControlGroup.default_robot_pulse = RobotControlGroup(None, None, robot_control_group.DefaultRobotPulse)

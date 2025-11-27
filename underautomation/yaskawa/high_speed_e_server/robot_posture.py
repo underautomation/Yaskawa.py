@@ -71,6 +71,5 @@ class RobotPosture:
 	@property
 	def w_axis(self) -> AxisFlipInformation:
 		return AxisFlipInformation(self._instance.WAxis)
-	@property
-	def default(self) -> 'RobotPosture':
-		return RobotPosture(None, None, self._instance.Default)
+
+RobotPosture.default = RobotPosture(None, None, robot_posture.Default)
