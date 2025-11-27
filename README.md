@@ -82,7 +82,7 @@ print(joint_position.axes)
 
 # Read and write register
 reg = robot.high_speed_e_server.read_register(10, count=2)
-robot.high_speed_e_server.write_register(10, [1234, 5678])
+robot.high_speed_e_server.write_register(10, [12, 62])
 
 # Reset alarm
 robot.high_speed_e_server.alarm_reset(AlarmResetType.Reset)
