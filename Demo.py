@@ -3,8 +3,7 @@ from underautomation.yaskawa.high_speed_e_server.alarm_reset_type import AlarmRe
 from underautomation.yaskawa.high_speed_e_server.position_command_classification import PositionCommandClassification
 from underautomation.yaskawa.yaskawa_robot import YaskawaRobot
 from underautomation.yaskawa.high_speed_e_server.position_command_operation_coordinate import PositionCommandOperationCoordinate
-import typing
-
+from underautomation.yaskawa.high_speed_e_server.position_command_type import PositionCommandType
 
 robot = YaskawaRobot()
 parameters = ConnectParameters("192.168.0.1")
@@ -29,7 +28,8 @@ robot.high_speed_e_server.move_cartesian(
 retval = robot.high_speed_e_server.move_joints(
     axesPulse=[0, 0, 0, 0, 0, 0],
     classification=PositionCommandClassification.Cartesian_MM_S,
-    speed=10
+    speed=10,
+    commandtype= PositionCommandType.LinkAbsolute
 )
 
 # Get current joint position
