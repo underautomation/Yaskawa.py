@@ -29,7 +29,8 @@ retval = robot.high_speed_e_server.move_joints(
     axesPulse=[0, 0, 0, 0, 0, 0],
     classification=PositionCommandClassification.Cartesian_MM_S,
     speed=10,
-    commandtype= PositionCommandType.LinkAbsolute
+    commandtype= PositionCommandType.LinkAbsolute,
+    RobotControlGroup=0
 )
 
 # Get current joint position
