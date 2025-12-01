@@ -116,12 +116,27 @@ robot.high_speed_e_server.alarm_reset(AlarmResetType.Reset)
 
 ## 🛠 Installation
 
-### 1. Clone the SDK
+### 1. Install the SDK
+
+#### Install from this repo to develop
 
 ```bash
 git clone https://github.com/underautomation/yaskawa.py.git
 cd yaskawa.py
 pip install -e .
+```
+
+#### Install from pip
+
+```bash
+pip install UnderAutomation.Yaskawa
+```
+
+On Linux, you should also install .NET Core and set environment variable PYTHONNET_RUNTIME to coreclr :
+
+```bash
+sudo apt-get install -y dotnet-runtime-8.0
+PYTHONNET_RUNTIME=coreclr
 ```
 
 ### 2. Connect to your robot
