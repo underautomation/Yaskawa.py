@@ -113,7 +113,7 @@ POS_CMD_STRAIGHT_ABS = PositionCommandType.StraightAbsolute
 MANAGEMENT_TIME_DEFAULT = ManagementTimeType.ControlPowerOnTime
 
 
-ROBOT_CONTROL_GROUP_DEFAULT = RobotControlGroup.default_robot_cartesian
+ROBOT_CONTROL_GROUP_DEFAULT = RobotControlGroup.DefaultRobotCartesian
 
 
 @pytest.mark.parametrize(

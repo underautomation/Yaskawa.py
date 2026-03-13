@@ -170,3 +170,4 @@ cython_debug/
 .pypirc
 
 .venv-linux/
+examples/robot_config.json

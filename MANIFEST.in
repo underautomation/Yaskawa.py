@@ -1,0 +1,4 @@
+include README.md
+recursive-include underautomation/yaskawa/lib *.dll *.txt
+prune tests
+prune examples
