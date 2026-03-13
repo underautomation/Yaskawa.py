@@ -1,8 +1,6 @@
-import clr
-import os
-clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
-from UnderAutomation.Yaskawa.HighSpeedEServer import RegardedReversePositionSpecified as regarded_reverse_position_specified
+from enum import IntEnum
 
-class RegardedReversePositionSpecified(int):
-	Previous = regarded_reverse_position_specified.Previous
-	Form = regarded_reverse_position_specified.Form
+class RegardedReversePositionSpecified(IntEnum):
+	'''Specifies how to handle position in reverse direction scenarios.'''
+	Previous = 0 # Use the previous position as reference.
+	Form = 1 # Use the specified form/posture as reference.

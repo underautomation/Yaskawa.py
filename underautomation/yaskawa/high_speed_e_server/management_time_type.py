@@ -1,17 +1,15 @@
-import clr
-import os
-clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
-from UnderAutomation.Yaskawa.HighSpeedEServer import ManagementTimeType as management_time_type
+from enum import IntEnum
 
-class ManagementTimeType(int):
-	ControlPowerOnTime = management_time_type.ControlPowerOnTime
-	ServoPowerOnTimeTotal = management_time_type.ServoPowerOnTimeTotal
-	ServoPowerOnTimR1ToR8 = management_time_type.ServoPowerOnTimR1ToR8
-	ServoPowerOnTimeS1ToS24 = management_time_type.ServoPowerOnTimeS1ToS24
-	PlayBackTimeTotal = management_time_type.PlayBackTimeTotal
-	PlayBackTimeR1ToR8 = management_time_type.PlayBackTimeR1ToR8
-	PlayBackTimeS1ToS24 = management_time_type.PlayBackTimeS1ToS24
-	MotionTimeTotal = management_time_type.MotionTimeTotal
-	MotionTimeR1ToR8 = management_time_type.MotionTimeR1ToR8
-	MotionTimeS1ToS24 = management_time_type.MotionTimeS1ToS24
-	OperationTimeApplication1To8 = management_time_type.OperationTimeApplication1To8
+class ManagementTimeType(IntEnum):
+	'''Specifies the type of management time data to retrieve. Different metrics track various aspects of robot operation.'''
+	ControlPowerOnTime = 1 # Total time the controller power has been on.
+	ServoPowerOnTimeTotal = 10 # Total servo power on time across all robots.
+	ServoPowerOnTimR1ToR8 = 10 # Servo power on time for robots R1 through R8. Add robot number (0-7) to get specific robot.
+	ServoPowerOnTimeS1ToS24 = 20 # Servo power on time for stations S1 through S24. Add station number (0-23) to get specific station.
+	PlayBackTimeTotal = 110 # Total playback time across all robots.
+	PlayBackTimeR1ToR8 = 110 # Playback time for robots R1 through R8. Add robot number (0-7) to get specific robot.
+	PlayBackTimeS1ToS24 = 120 # Playback time for stations S1 through S24. Add station number (0-23) to get specific station.
+	MotionTimeTotal = 210 # Total motion time across all robots.
+	MotionTimeR1ToR8 = 210 # Motion time for robots R1 through R8. Add robot number (0-7) to get specific robot.
+	MotionTimeS1ToS24 = 221 # Motion time for stations S1 through S24. Add station number (0-23) to get specific station.
+	OperationTimeApplication1To8 = 300 # Operation time for applications 1 through 8. Add application number (0-7) to get specific application.

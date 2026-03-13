@@ -1,8 +1,6 @@
-import clr
-import os
-clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
-from UnderAutomation.Yaskawa.HighSpeedEServer import RobotBasePositionType as robot_base_position_type
+from enum import IntEnum
 
-class RobotBasePositionType(int):
-	PulseValue = robot_base_position_type.PulseValue
-	BaseCoordinateValue = robot_base_position_type.BaseCoordinateValue
+class RobotBasePositionType(IntEnum):
+	'''Defines the type of base position data representation.'''
+	PulseValue = 0 # Position is represented as encoder pulse values.
+	BaseCoordinateValue = 16 # Position is represented in base coordinate system values.

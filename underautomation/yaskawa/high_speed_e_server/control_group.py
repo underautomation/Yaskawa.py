@@ -1,11 +1,9 @@
-import clr
-import os
-clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
-from UnderAutomation.Yaskawa.HighSpeedEServer import ControlGroup as control_group
+from enum import IntEnum
 
-class ControlGroup(int):
-	RobotPulseValue = control_group.RobotPulseValue
-	BasePulseValue = control_group.BasePulseValue
-	StationPulseValue = control_group.StationPulseValue
-	RobotCartesian = control_group.RobotCartesian
-	BaseCartesian = control_group.BaseCartesian
+class ControlGroup(IntEnum):
+	'''Defines control group types for robot systems. Control groups organize different motion units within the robot system.'''
+	RobotPulseValue = 0 # Robot axes in pulse (encoder) values. Valid index: 1-8.
+	BasePulseValue = 10 # Base axes in pulse values. Valid index: 1-8.
+	StationPulseValue = 21 # Station axes in pulse values. Valid index: 1-44.
+	RobotCartesian = 100 # Robot axes in Cartesian coordinates. Valid index: 1-8.
+	BaseCartesian = 110 # Base axes in Cartesian coordinates. Valid index: 1-8.

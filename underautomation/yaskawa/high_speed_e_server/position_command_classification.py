@@ -1,9 +1,7 @@
-import clr
-import os
-clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
-from UnderAutomation.Yaskawa.HighSpeedEServer import PositionCommandClassification as position_command_classification
+from enum import IntEnum
 
-class PositionCommandClassification(int):
-	LinkPercent = position_command_classification.LinkPercent
-	Cartesian_MM_S = position_command_classification.Cartesian_MM_S
-	Cartesian_DEG_S = position_command_classification.Cartesian_DEG_S
+class PositionCommandClassification(IntEnum):
+	'''Specifies the speed classification (units) for motion commands. Determines how the speed value is interpreted by the controller.'''
+	LinkPercent = 0 # Speed as percentage of maximum link (joint) speed. Valid range: 0.01 to 100.00 percent.
+	Cartesian_MM_S = 1 # Speed in millimeters per second for linear motion. Valid range depends on robot model.
+	Cartesian_DEG_S = 2 # Speed in degrees per second for rotational motion. Valid range depends on robot model.

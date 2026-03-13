@@ -1,10 +1,8 @@
-import clr
-import os
-clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
-from UnderAutomation.Yaskawa.HighSpeedEServer import RobotRecentAlarm as robot_recent_alarm
+from enum import IntEnum
 
-class RobotRecentAlarm(int):
-	Latest = robot_recent_alarm.Latest
-	SecondLatest = robot_recent_alarm.SecondLatest
-	ThirdLatest = robot_recent_alarm.ThirdLatest
-	FourthLatest = robot_recent_alarm.FourthLatest
+class RobotRecentAlarm(IntEnum):
+	'''Specifies which recent alarm to retrieve from the robot controller. The controller maintains a history of the most recent alarms.'''
+	Latest = 1 # The most recent (current) alarm.
+	SecondLatest = 2 # The second most recent alarm.
+	ThirdLatest = 3 # The third most recent alarm.
+	FourthLatest = 4 # The fourth most recent alarm.

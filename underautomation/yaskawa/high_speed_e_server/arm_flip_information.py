@@ -1,8 +1,6 @@
-import clr
-import os
-clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
-from UnderAutomation.Yaskawa.HighSpeedEServer import ArmFlipInformation as arm_flip_information
+from enum import IntEnum
 
-class ArmFlipInformation(int):
-	Upper = arm_flip_information.Upper
-	Lower = arm_flip_information.Lower
+class ArmFlipInformation(IntEnum):
+	'''Specifies the arm configuration (upper/lower) based on L and U axis positions.'''
+	Upper = 0 # Upper arm configuration - elbow is above the line between shoulder and wrist.
+	Lower = 1 # Lower arm configuration - elbow is below the line between shoulder and wrist.

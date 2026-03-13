@@ -1,9 +1,7 @@
-import clr
-import os
-clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
-from UnderAutomation.Yaskawa.HighSpeedEServer import OnOffCommandType as on_off_command_type
+from enum import IntEnum
 
-class OnOffCommandType(int):
-	Hold = on_off_command_type.Hold
-	Servo = on_off_command_type.Servo
-	HLock = on_off_command_type.HLock
+class OnOffCommandType(IntEnum):
+	'''Specifies the type of ON/OFF command to send to the robot controller. These commands control fundamental robot states that affect safety and operation.'''
+	Hold = 1 # Hold command - pauses robot motion while maintaining servo power. Robot can resume from held position. Value: 1.
+	Servo = 2 # Servo power command - enables or disables motor power to the robot. Servo must be ON for the robot to move. Value: 2.
+	HLock = 3 # Lock Teach Pendant. Value: 3.

@@ -1,8 +1,6 @@
-import clr
-import os
-clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
-from UnderAutomation.Yaskawa.HighSpeedEServer import AlarmResetType as alarm_reset_type
+from enum import IntEnum
 
-class AlarmResetType(int):
-	Reset = alarm_reset_type.Reset
-	Cancel = alarm_reset_type.Cancel
+class AlarmResetType(IntEnum):
+	'''Specifies the type of alarm reset operation to perform.'''
+	Reset = 1 # Reset the current alarm. Requires the alarm condition to be resolved.
+	Cancel = 2 # Cancel the current error. Used for recoverable errors.

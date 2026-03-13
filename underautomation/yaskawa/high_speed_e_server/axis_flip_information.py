@@ -1,8 +1,6 @@
-import clr
-import os
-clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
-from UnderAutomation.Yaskawa.HighSpeedEServer import AxisFlipInformation as axis_flip_information
+from enum import IntEnum
 
-class AxisFlipInformation(int):
-	LT180 = axis_flip_information.LT180
-	UT180 = axis_flip_information.UT180
+class AxisFlipInformation(IntEnum):
+	'''Specifies whether an axis angle is less than or greater than/equal to 180 degrees. Used for determining robot configuration in multi-solution situations.'''
+	LT180 = 0 # Axis angle is less than 180 degrees.
+	UT180 = 1 # Axis angle is greater than or equal to 180 degrees.

@@ -1,8 +1,6 @@
-import clr
-import os
-clr.AddReference(os.path.realpath(os.path.join(os.path.dirname(__file__), "..",  'lib', 'UnderAutomation.Yaskawa.dll')))
-from UnderAutomation.Yaskawa.HighSpeedEServer import FlipNoFlipInformation as flip_no_flip_information
+from enum import IntEnum
 
-class FlipNoFlipInformation(int):
-	Flip = flip_no_flip_information.Flip
-	NoFlip = flip_no_flip_information.NoFlip
+class FlipNoFlipInformation(IntEnum):
+	'''Specifies the flip/no-flip wrist configuration.'''
+	Flip = 0 # Flip configuration - wrist is in flipped orientation.
+	NoFlip = 1 # No-flip configuration - wrist is in standard orientation.
