@@ -28,7 +28,6 @@ from underautomation.yaskawa.high_speed_e_server.robot_double_integer_variable_d
 from underautomation.yaskawa.high_speed_e_server.robot_real_variable_data import RobotRealVariableData
 from underautomation.yaskawa.high_speed_e_server.robot_string_variable_data import RobotStringVariableData
 from underautomation.yaskawa.high_speed_e_server.robot_position_variable_data import RobotPositionVariableData
-from underautomation.yaskawa.high_speed_e_server.robot_position_data_1 import RobotPositionData1
 from underautomation.yaskawa.high_speed_e_server.robot_base_position_variable_data import RobotBasePositionVariableData
 from underautomation.yaskawa.high_speed_e_server.robot_base_position_data import RobotBasePositionData
 from underautomation.yaskawa.high_speed_e_server.robot_external_axis_variable_data import RobotExternalAxisVariableData
@@ -363,8 +362,14 @@ class HighSpeedEServerClientBase:
 		'''
 		return RobotPositionVariableData(self._instance.ReadPositionVariable(firstIndex, count))
 
-	def write_position_variable(self, firstIndex: int, data: typing.List[RobotPositionData1]) -> RobotDataHeader:
-		return RobotDataHeader(self._instance.WritePositionVariable(firstIndex, data))
+	def write_position_variable(self, firstIndex: int, data: typing.List[RobotPositionIntData]) -> RobotDataHeader:
+		'''Writes position variables (P variables) to the robot controller.
+
+		:param firstIndex: Starting position variable index.
+		:param data: Array of position data to write.
+		:returns: Response header indicating success.
+		'''
+		return RobotDataHeader(self._instance.WritePositionVariable(firstIndex, [x._instance if x else None for x in data]))
 
 	def read_base_position(self, firstIndex: int, count: int) -> RobotBasePositionVariableData:
 		'''Reads multiple base position variables (BP variables) from the robot controller. Base position variables define reference coordinate frames for robot operations.
@@ -382,7 +387,7 @@ class HighSpeedEServerClientBase:
 		:param data: Array of base position data to write.
 		:returns: Response header indicating success.
 		'''
-		return RobotDataHeader(self._instance.WriteBasePosition(firstIndex, data))
+		return RobotDataHeader(self._instance.WriteBasePosition(firstIndex, [x._instance if x else None for x in data]))
 
 	def read_external_position(self, firstIndex: int, count: int) -> RobotExternalAxisVariableData:
 		'''Reads multiple external axis variables (EX variables) from the robot controller. External axis variables store positions for additional axes beyond the main robot arm.
@@ -394,7 +399,7 @@ class HighSpeedEServerClientBase:
 		return RobotExternalAxisVariableData(self._instance.ReadExternalPosition(firstIndex, count))
 
 	def write_external_position(self, firstIndex: int, data: typing.List[RobotAxisRawData1]) -> RobotDataHeader:
-		return RobotDataHeader(self._instance.WriteExternalPosition(firstIndex, data))
+		return RobotDataHeader(self._instance.WriteExternalPosition(firstIndex, [x._instance if x else None for x in data]))
 
 	def get_alarm_extended(self, alarm: RobotRecentAlarm) -> RobotAlarmDataExtended:
 		'''Retrieves extended alarm information including sub-code character strings. Provides more detailed information than GetAlarm for troubleshooting.
