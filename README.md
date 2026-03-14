@@ -209,31 +209,29 @@ python examples/launcher.py
 
 ### 📡 High Speed Ethernet Server Examples
 
-| Example                                                                                           | Description                                             |
-| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| [`hses_get_status.py`](examples/high_speed_e_server/hses_get_status.py)                           | Read robot status: mode, servo, alarms, hold state      |
-| [`hses_get_cartesian_position.py`](examples/high_speed_e_server/hses_get_cartesian_position.py)   | Read current TCP position (X, Y, Z, Rx, Ry, Rz)         |
-| [`hses_get_joint_position.py`](examples/high_speed_e_server/hses_get_joint_position.py)           | Read current joint position (pulse values)              |
-| [`hses_read_alarms.py`](examples/high_speed_e_server/hses_read_alarms.py)                         | Read active alarms with code, type, and message         |
-| [`hses_alarm_reset.py`](examples/high_speed_e_server/hses_alarm_reset.py)                         | Reset alarms (standard or error reset)                  |
-| [`hses_get_executing_job.py`](examples/high_speed_e_server/hses_get_executing_job.py)             | Get currently executing job name, line, and speed       |
-| [`hses_select_start_job.py`](examples/high_speed_e_server/hses_select_start_job.py)               | Select a job by name and start it                       |
-| [`hses_read_write_registers.py`](examples/high_speed_e_server/hses_read_write_registers.py)       | Read and write numeric registers                        |
-| [`hses_read_write_integers.py`](examples/high_speed_e_server/hses_read_write_integers.py)         | Read and write integer variables                        |
-| [`hses_read_write_reals.py`](examples/high_speed_e_server/hses_read_write_reals.py)               | Read and write real (float) variables                   |
-| [`hses_read_write_bytes.py`](examples/high_speed_e_server/hses_read_write_bytes.py)               | Read and write byte variables                           |
-| [`hses_read_write_strings.py`](examples/high_speed_e_server/hses_read_write_strings.py)           | Read and write string variables (16 & 32 bytes)         |
-| [`hses_read_write_io.py`](examples/high_speed_e_server/hses_read_write_io.py)                     | Read and write I/O signals (general, external, network) |
-| [`hses_read_position_variables.py`](examples/high_speed_e_server/hses_read_position_variables.py) | Read position variables from the controller             |
-| [`hses_move_cartesian.py`](examples/high_speed_e_server/hses_move_cartesian.py)                   | Move robot to a Cartesian position                      |
-| [`hses_move_joints.py`](examples/high_speed_e_server/hses_move_joints.py)                         | Move robot by specifying joint pulse values             |
-| [`hses_servo_command.py`](examples/high_speed_e_server/hses_servo_command.py)                     | Send servo ON/OFF commands                              |
-| [`hses_display_message.py`](examples/high_speed_e_server/hses_display_message.py)                 | Display a message on the teach pendant                  |
-| [`hses_get_system_info.py`](examples/high_speed_e_server/hses_get_system_info.py)                 | Read system information (software version, name)        |
-| [`hses_position_error_torque.py`](examples/high_speed_e_server/hses_position_error_torque.py)     | Read position error and torque for each axis            |
-| [`hses_get_management_time.py`](examples/high_speed_e_server/hses_get_management_time.py)         | Read management time (operating, servo, playback)       |
-| [`hses_file_operations.py`](examples/high_speed_e_server/hses_file_operations.py)                 | List, download, upload, and delete files                |
-| [`hses_get_configuration.py`](examples/high_speed_e_server/hses_get_configuration.py)             | Read axis configuration information                     |
+| Example                                                                                                       | Description                                             |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [`hses_get_status.py`](examples/high_speed_e_server/hses_get_status.py)                                       | Read robot status: mode, servo, alarms, hold state      |
+| [`hses_get_cartesian_position.py`](examples/high_speed_e_server/hses_get_cartesian_position.py)               | Read current TCP position (X, Y, Z, Rx, Ry, Rz)         |
+| [`hses_get_joint_position.py`](examples/high_speed_e_server/hses_get_joint_position.py)                       | Read current joint position (pulse values)              |
+| [`hses_read_alarms.py`](examples/high_speed_e_server/hses_read_alarms.py)                                     | Read active alarms with code, type, and message         |
+| [`hses_alarm_reset.py`](examples/high_speed_e_server/hses_alarm_reset.py)                                     | Reset alarms (standard or error reset)                  |
+| [`hses_get_executing_job.py`](examples/high_speed_e_server/hses_get_executing_job.py)                         | Get currently executing job name, line, and speed       |
+| [`hses_select_start_job.py`](examples/high_speed_e_server/hses_select_start_job.py)                           | Select a job by name and start it                       |
+| [`hses_read_write_registers.py`](examples/high_speed_e_server/hses_read_write_registers.py)                   | Read and write numeric registers                        |
+| [`hses_read_write_integers.py`](examples/high_speed_e_server/hses_read_write_integers.py)                     | Read and write integer variables                        |
+| [`hses_read_write_reals.py`](examples/high_speed_e_server/hses_read_write_reals.py)                           | Read and write real (float) variables                   |
+| [`hses_read_write_bytes.py`](examples/high_speed_e_server/hses_read_write_bytes.py)                           | Read and write byte variables                           |
+| [`hses_read_write_strings.py`](examples/high_speed_e_server/hses_read_write_strings.py)                       | Read and write string variables (16 & 32 bytes)         |
+| [`hses_read_write_io.py`](examples/high_speed_e_server/hses_read_write_io.py)                                 | Read and write I/O signals (general, external, network) |
+| [`hses_read_write_position_variables.py`](examples/high_speed_e_server/hses_read_write_position_variables.py) | Read and write position variables (P variables)         |
+| [`hses_move_cartesian.py`](examples/high_speed_e_server/hses_move_cartesian.py)                               | Move robot to a Cartesian position                      |
+| [`hses_move_joints.py`](examples/high_speed_e_server/hses_move_joints.py)                                     | Move robot by specifying joint pulse values             |
+| [`hses_servo_command.py`](examples/high_speed_e_server/hses_servo_command.py)                                 | Send servo ON/OFF commands                              |
+| [`hses_display_message.py`](examples/high_speed_e_server/hses_display_message.py)                             | Display a message on the teach pendant                  |
+| [`hses_get_system_info.py`](examples/high_speed_e_server/hses_get_system_info.py)                             | Read system information (software version, name)        |
+| [`hses_position_error_torque.py`](examples/high_speed_e_server/hses_position_error_torque.py)                 | Read position error and torque for each axis            |
+| [`hses_file_operations.py`](examples/high_speed_e_server/hses_file_operations.py)                             | List, download, upload, and delete files                |
 
 ### 🔑 License Examples
 
