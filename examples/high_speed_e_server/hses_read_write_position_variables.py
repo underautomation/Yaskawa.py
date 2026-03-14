@@ -16,8 +16,7 @@ print("=" * 60)
 print("  YASKAWA SDK - HSES: Read/Write Position Variables")
 print("=" * 60)
 
-"""robot = connect_robot()"""
-robot = YaskawaRobot()
+robot = connect_robot()
 
 try:
     while True:
