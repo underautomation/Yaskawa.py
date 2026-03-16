@@ -137,7 +137,8 @@ if robot.high_speed_e_server.connected:
 
     # Read registers
     reg = robot.high_speed_e_server.read_register(0, count=5)
-    print(f"\nRegisters: {reg.values}")
+    for i, val in enumerate(reg.value, start=0):
+        print(f"  Register[{i}] = {val}")
 
     # Write registers
     robot.high_speed_e_server.write_register(0, [100, 200])
