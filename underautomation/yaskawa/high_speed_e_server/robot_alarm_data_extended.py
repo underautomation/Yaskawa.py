@@ -1,4 +1,5 @@
 import typing
+from __future__ import annotation
 from underautomation.yaskawa.high_speed_e_server.robot_alarm_data import RobotAlarmData
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotAlarmDataExtended as robot_alarm_data_extended
 

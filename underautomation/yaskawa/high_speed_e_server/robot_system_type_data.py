@@ -1,4 +1,5 @@
 import typing
+from __future__ import annotation
 from underautomation.yaskawa.high_speed_e_server.robot_system_type import RobotSystemType
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotSystemTypeData as robot_system_type_data
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotSystemType as robot_system_type

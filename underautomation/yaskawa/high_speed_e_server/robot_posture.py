@@ -1,4 +1,5 @@
 import typing
+from __future__ import annotation
 from underautomation.yaskawa.high_speed_e_server.orientation_flip_information import OrientationFlipInformation
 from underautomation.yaskawa.high_speed_e_server.arm_flip_information import ArmFlipInformation
 from underautomation.yaskawa.high_speed_e_server.flip_no_flip_information import FlipNoFlipInformation

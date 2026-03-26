@@ -1,4 +1,5 @@
 import typing
+from __future__ import annotation
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotDataHeader as robot_data_header
 
 class RobotDataHeader:

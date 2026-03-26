@@ -1,4 +1,5 @@
 import typing
+from __future__ import annotation
 from UnderAutomation.Yaskawa.HighSpeedEServer import HighSpeedEServerConnectParameters as high_speed_e_server_connect_parameters
 
 class HighSpeedEServerConnectParameters:

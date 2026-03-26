@@ -1,4 +1,5 @@
 import typing
+from __future__ import annotation
 from underautomation.yaskawa.high_speed_e_server.robot_base_position_data import RobotBasePositionData
 from underautomation.yaskawa.high_speed_e_server.robot_data import RobotData
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotBasePositionVariableData as robot_base_position_variable_data

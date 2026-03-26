@@ -1,4 +1,5 @@
 import typing
+from __future__ import annotation
 from UnderAutomation.Yaskawa.Common import ConnectException as connect_exception
 
 class ConnectException:

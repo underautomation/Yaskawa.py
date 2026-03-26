@@ -1,4 +1,5 @@
 import typing
+from __future__ import annotation
 from underautomation.yaskawa.high_speed_e_server.robot_data import RobotData
 from underautomation.yaskawa.high_speed_e_server.robot_data_header import RobotDataHeader
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotFileContentData as robot_file_content_data

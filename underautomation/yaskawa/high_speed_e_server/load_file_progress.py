@@ -1,4 +1,5 @@
 import typing
+from __future__ import annotation
 from UnderAutomation.Yaskawa.HighSpeedEServer import LoadFileProgress as load_file_progress
 
 class LoadFileProgress:

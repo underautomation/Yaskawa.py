@@ -1,4 +1,5 @@
 import typing
+from __future__ import annotation
 from datetime import datetime, timedelta
 from underautomation.yaskawa.license.license_state import LicenseState
 from UnderAutomation.Yaskawa.License import LicenseInfo as license_info

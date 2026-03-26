@@ -1,4 +1,5 @@
 import typing
+from __future__ import annotation
 from underautomation.yaskawa.high_speed_e_server.robot_axis_raw_data_1 import RobotAxisRawData1
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotAxisConfigData as robot_axis_config_data
 
