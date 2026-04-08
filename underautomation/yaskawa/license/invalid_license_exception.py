@@ -1,5 +1,5 @@
+from __future__ import annotations
 import typing
-from __future__ import annotation
 from underautomation.yaskawa.license.license_info import LicenseInfo
 from UnderAutomation.Yaskawa.License import InvalidLicenseException as invalid_license_exception
 

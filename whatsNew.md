@@ -1,6 +1,4 @@
-## Fixed Enum Tool / User Coordinates
+## Fixed `from __future__ import annotations` ordering
 
-- Corrected swapped enum values for tool/user coordinate modes in High Speed Ethernet Server position data.
-- `PositionCommandOperationCoordinate.Tool` is now value `18` (TCP/tool frame).
-- `PositionCommandOperationCoordinate.User` is now value `19` (user-defined frame).
-- `RobotPositionDataType.ToolCoordinateValue` and `RobotPositionDataType.UserCoordinateValue` were aligned accordingly.
+- Moved `from __future__ import annotations` before `import typing` in all Python files under `underautomation/yaskawa/`.
+- `from __future__` imports must be the first statement in a module to take effect. 51 files were corrected.

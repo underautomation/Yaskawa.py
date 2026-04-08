@@ -1,5 +1,5 @@
+from __future__ import annotations
 import typing
-from __future__ import annotation
 from underautomation.yaskawa.high_speed_e_server.robot_data_header import RobotDataHeader
 from underautomation.yaskawa.high_speed_e_server.robot_posture import RobotPosture
 from underautomation.yaskawa.high_speed_e_server.robot_position_data_type import RobotPositionDataType

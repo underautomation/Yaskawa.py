@@ -1,5 +1,5 @@
+from __future__ import annotations
 import typing
-from __future__ import annotation
 from underautomation.yaskawa.high_speed_e_server.internal.high_speed_e_server_connect_parameters_internal import HighSpeedEServerConnectParametersInternal
 from UnderAutomation.Yaskawa import ConnectParameters as connect_parameters
 

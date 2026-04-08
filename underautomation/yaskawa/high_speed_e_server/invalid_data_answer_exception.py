@@ -1,5 +1,5 @@
+from __future__ import annotations
 import typing
-from __future__ import annotation
 from UnderAutomation.Yaskawa.HighSpeedEServer import InvalidDataAnswerException as invalid_data_answer_exception
 
 class InvalidDataAnswerException:

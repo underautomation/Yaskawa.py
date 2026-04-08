@@ -1,5 +1,5 @@
+from __future__ import annotations
 import typing
-from __future__ import annotation
 from underautomation.yaskawa.high_speed_e_server.robot_kinematics_position_data import RobotKinematicsPositionData
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotKinematicsCartesianData as robot_kinematics_cartesian_data
 

@@ -1,5 +1,5 @@
+from __future__ import annotations
 import typing
-from __future__ import annotation
 from underautomation.yaskawa.common.io_type import IOType
 from UnderAutomation.Yaskawa.Common import IoHelpers as io_helpers
 from UnderAutomation.Yaskawa.Common import IOType as io_type

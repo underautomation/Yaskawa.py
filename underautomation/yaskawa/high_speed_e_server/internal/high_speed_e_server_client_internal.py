@@ -1,5 +1,5 @@
+from __future__ import annotations
 import typing
-from __future__ import annotation
 from underautomation.yaskawa.high_speed_e_server.internal.high_speed_e_server_client_base import HighSpeedEServerClientBase
 from UnderAutomation.Yaskawa.HighSpeedEServer.Internal import HighSpeedEServerClientInternal as high_speed_e_server_client_internal
 

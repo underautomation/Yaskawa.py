@@ -1,5 +1,5 @@
+from __future__ import annotations
 import typing
-from __future__ import annotation
 from UnderAutomation.Yaskawa.HighSpeedEServer import GetFileProgress as get_file_progress
 
 class GetFileProgress:
