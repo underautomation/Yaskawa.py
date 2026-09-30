@@ -1,308 +1,269 @@
-# Yaskawa Communication SDK for Python
+# Yaskawa Robot Communication SDK for Python
 
-[![UnderAutomation Yaskawa communication SDK](https://raw.githubusercontent.com/underautomation/yaskawa.NET/refs/heads/main/.github/assets/banner.png)](https://underautomation.com)
+[![UnderAutomation Yaskawa communication SDK](https://raw.githubusercontent.com/underautomation/Yaskawa.NET/refs/heads/main/.github/assets/banner.png)](https://underautomation.com/yaskawa)
 
 [![PyPI](https://img.shields.io/pypi/v/UnderAutomation.Yaskawa?label=PyPI&logo=pypi)](https://pypi.org/project/UnderAutomation.Yaskawa/)
-[![Python](https://img.shields.io/badge/Python-3.7_|_3.8_|_3.9_|_3.10_|_3.11_|_3.12-blue?logo=python)](#)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blue)](#)
-[![License](https://img.shields.io/badge/License-Commercial-red)](https://underautomation.com/yaskawa/eula)
+[![PyPI downloads](https://img.shields.io/pypi/dm/UnderAutomation.Yaskawa?label=Downloads&logo=pypi)](https://pypi.org/project/UnderAutomation.Yaskawa/)
+[![Python](https://img.shields.io/badge/Python-3.7_to_3.13-blue)](#compatibility)
+[![Platforms](https://img.shields.io/badge/OS-Windows_Linux_macOS-informational)](#compatibility)
+[![License](https://img.shields.io/badge/license-commercial-blue)](https://underautomation.com/yaskawa/eula)
 
-### 🤖 Effortlessly Communicate with Yaskawa Motoman Robots
+**UnderAutomation.Yaskawa** is a Python package that communicates with Yaskawa Motoman robot controllers
+(**YRC1000 (micro)**, **MOTOMAN NEXT**, **DX100 / DX200**, **FS100**, **ERC / XRC / MRC**) through the **High Speed Ethernet Server** (HSES) of the
+controller, over UDP. Nothing is installed on the controller, no Yaskawa option is needed.
 
-The **Yaskawa SDK for Python** enables seamless integration with Yaskawa Motoman robots for automation, data exchange, and remote control through the **High-Speed Ethernet Server (HSES)** protocol.
+Use it to read the status, the alarms and the positions, move the robot, select and start jobs, read and
+write variables and I/O, and transfer files, from a Python script.
 
-> Whether you're building a custom application, integrating with a MES/SCADA system, or performing advanced diagnostics, this SDK provides the tools you need.
+- Product page: [underautomation.com/yaskawa](https://underautomation.com/yaskawa)
+- Documentation: [underautomation.com/yaskawa/documentation/get-started-python](https://underautomation.com/yaskawa/documentation/get-started-python)
+- Also available for .NET: [Yaskawa.NET](https://github.com/underautomation/Yaskawa.NET), and LabVIEW: [Yaskawa.vi](https://github.com/underautomation/Yaskawa.vi).
 
-🔗 **More Information:** [https://underautomation.com/yaskawa](https://underautomation.com/yaskawa)  
-🔗 Also available in **[🟦 .NET](https://github.com/underautomation/yaskawa.NET)** and **[🟨 LabVIEW](https://github.com/underautomation/yaskawa.vi)**
+## How it works
 
----
+The package wraps the .NET library `UnderAutomation.Yaskawa.dll` with [pythonnet](https://github.com/pythonnet/pythonnet).
+The DLL is inside the package: `pip install` installs everything, including pythonnet.
 
-[⭐ Star this repo if it's useful to you!](https://github.com/underautomation/yaskawa.py/stargazers)  
-[👁️ Watch for updates](https://github.com/underautomation/yaskawa.py/watchers)
+- **Windows:** the DLL runs on the .NET Framework 4.x of Windows. Nothing else to install.
+- **Linux and macOS:** install the .NET runtime (for example .NET 8), then tell pythonnet to use it before
+  you start Python:
 
----
+  ```bash
+  sudo apt-get install -y dotnet-runtime-8.0   # Ubuntu, for example
+  export PYTHONNET_RUNTIME=coreclr
+  ```
 
-## 🚀 TL;DR
+  Without this variable, pythonnet uses Mono, its default runtime on Linux and macOS. You can also choose
+  the runtime in your code, before the first import of the package:
 
-- 📡 **High-Speed Ethernet Server** - real-time UDP communication
-- 🤖 **Move robot** in Cartesian or joint space
-- 📊 **Read robot status** - mode, servo, alarms, hold state
-- 🔔 **Alarm management** - read active alarms, reset
-- ⚡ **I/O control** - read/write general, external, network I/O
-- 💾 **Variable access** - registers, bytes, integers, reals, strings, positions
-- 🧠 **Job control** - select, start, monitor executing jobs
-- 📂 **File management** - list, upload, download, delete files
-- ✍️ **Pendant display** - send messages to the teach pendant
-- ⏱️ **Management time** - operating time, servo time, playback time
-- 🔧 **System information** - software version, configuration, parameters
+  ```python
+  from pythonnet import load
+  load("coreclr")
+  ```
 
-> No custom robot options or additional hardware required. The SDK uses the **standard HSES protocol** available on Yaskawa controllers.
+## Installation
 
----
-
-## 🛠 Installation & Getting Started
-
-### Prerequisites
-
-- **Python 3.7** or higher
-- A Yaskawa Motoman robot (DX200, YRC1000, YRC1000 Micro)
-
-### Step 1 - Create a Virtual Environment
-
-We recommend using a virtual environment to keep your project dependencies isolated.
+Python 3.7 to 3.13 is supported (the limit of pythonnet 3.0.5). Install the package in a virtual
+environment:
 
 ```bash
-# Create a project folder
-mkdir my-yaskawa-project
-cd my-yaskawa-project
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# Linux and macOS
+source .venv/bin/activate
 
-# Create a virtual environment
-python -m venv venv
-
-# Activate it
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-```
-
-You should see `(venv)` in your terminal prompt, indicating the virtual environment is active.
-
-### Step 2 - Install the SDK
-
-The SDK is published on PyPI. Install it with a single command:
-
-```bash
 pip install UnderAutomation.Yaskawa
 ```
 
-That's it! All dependencies (including `pythonnet`) are installed automatically.
-
-On **Linux**, you should also install .NET Core and set environment variable PYTHONNET_RUNTIME to coreclr:
+Or install it from the sources of this repository:
 
 ```bash
-sudo apt-get install -y dotnet-runtime-8.0
-PYTHONNET_RUNTIME=coreclr
+git clone https://github.com/underautomation/Yaskawa.py.git
+cd Yaskawa.py
+pip install -e .
 ```
 
-> **Alternative: install from source**
->
-> ```bash
-> git clone https://github.com/underautomation/Yaskawa.py.git
-> cd Yaskawa.py
-> pip install -e .
-> ```
-
-### Step 3 - Connect to Your Robot
-
-Create a Python file (e.g. `main.py`) and write:
+## Getting started
 
 ```python
 from underautomation.yaskawa.yaskawa_robot import YaskawaRobot
 from underautomation.yaskawa.connect_parameters import ConnectParameters
-from underautomation.yaskawa.high_speed_e_server.alarm_reset_type import AlarmResetType
 
-# Create a robot instance
+# The SDK runs in trial mode for 30 days. Register your key to remove the trial limit.
+# YaskawaRobot.register_license("Your Company", "your-license-key")
+
 robot = YaskawaRobot()
+robot.connect(ConnectParameters("192.168.0.1"))
 
-# Connect (replace with your robot's IP address)
-params = ConnectParameters("192.168.0.1")
-params.ping_before_connect = True
+status = robot.high_speed_e_server.get_status_information()
+print("Servo on:", status.servo_on, "Alarm:", status.alarming)
 
-# Connect to the robot
-# If you get a license exception, ask a trial license here: https://underautomation.com/license
-# and call YaskawaRobot.register_license(...) before connecting
-robot.connect(params)
-
-if robot.high_speed_e_server.connected:
-    print("Connected!")
-
-    # Get robot status
-    status = robot.high_speed_e_server.get_status_information()
-    print(f"  Servo ON   : {status.servo_on}")
-    print(f"  Running    : {status.running}")
-    print(f"  Mode       : {'Teach' if status.teach else 'Play'}")
-    print(f"  Alarming   : {status.alarming}")
-
-    # Get current Cartesian position
-    pos = robot.high_speed_e_server.get_robot_cartesian_position()
-    print(f"\nCartesian Position:")
-    print(f"  X={pos.x:.3f}  Y={pos.y:.3f}  Z={pos.z:.3f}")
-    print(f"  Rx={pos.rx:.3f}  Ry={pos.ry:.3f}  Rz={pos.rz:.3f}")
-
-    # Get current joint position
-    joint = robot.high_speed_e_server.get_robot_joint_position()
-    print(f"\nJoint Position: {joint.axes}")
-
-    # Read registers
-    reg = robot.high_speed_e_server.read_register(0, count=5)
-    for i, val in enumerate(reg.value, start=0):
-        print(f"  Register[{i}] = {val}")
-
-    # Write registers
-    robot.high_speed_e_server.write_register(0, [100, 200])
-
-    # Reset alarms
-    robot.high_speed_e_server.alarm_reset(AlarmResetType.Reset)
-
-# Don't forget to disconnect
 robot.disconnect()
 ```
 
-Run it:
+`ConnectParameters` also gives the ping before the connection (`ping_before_connect`, True by default),
+and the ports and timeouts of the High Speed Ethernet Server (`high_speed_e_server.data_port`,
+`high_speed_e_server.data_timeout_milliseconds`...).
 
-```bash
-python main.py
+## From .NET names to Python names
+
+The Python API is the .NET API with Python names. The [.NET documentation](https://underautomation.com/yaskawa/documentation)
+applies to Python.
+
+| .NET | Python |
+| --- | --- |
+| Method `GetStatusInformation()` | `get_status_information()` |
+| Property `HighSpeedEServer` | `high_speed_e_server` |
+| Static method `YaskawaRobot.RegisterLicense(...)` | `YaskawaRobot.register_license(...)` |
+| Enum value `AlarmResetType.Reset` | `AlarmResetType.Reset` (an `IntEnum`) |
+| Array `short[]` | list-like object, use `list(...)` to copy it |
+| `Nullable<int>` | `int \| None` |
+
+Each type is in the module named after it, in snake case:
+`UnderAutomation.Yaskawa.HighSpeedEServer.AlarmResetType` is
+`underautomation.yaskawa.high_speed_e_server.alarm_reset_type.AlarmResetType`.
+
+## Features
+
+Everything is reached through `robot.high_speed_e_server`.
+
+### Status and alarms
+
+```python
+from underautomation.yaskawa.high_speed_e_server.robot_recent_alarm import RobotRecentAlarm
+from underautomation.yaskawa.high_speed_e_server.alarm_reset_type import AlarmResetType
+
+status = robot.high_speed_e_server.get_status_information()
+print(status.teach, status.play, status.running)
+
+alarm = robot.high_speed_e_server.get_alarm(RobotRecentAlarm.Latest)
+print(alarm.code, alarm.text, alarm.occurring_time)
+
+robot.high_speed_e_server.alarm_reset(AlarmResetType.Reset)
 ```
 
----
+### Positions
 
-## 🔑 Licensing
+```python
+position = robot.high_speed_e_server.get_robot_cartesian_position()
+print(position.x, position.y, position.z, position.rx, position.ry, position.rz)
 
-The SDK works out of the box for **30 days** (trial period) - no registration needed.
+joints = robot.high_speed_e_server.get_robot_joint_position()
+print(list(joints.axes))  # pulses of each axis
+```
 
-After the trial, you can:
+### Motion
 
-- **Buy a license** at [underautomation.com/order](https://underautomation.com/order?sdk=yaskawa)
-- **Get a new trial period immediately by email** at [underautomation.com/license](https://underautomation.com/license?sdk=yaskawa)
+The robot must be in remote mode, see "Configure the robot" below.
 
-To register a license in code:
+```python
+from underautomation.yaskawa.high_speed_e_server.on_off_command_type import OnOffCommandType
+from underautomation.yaskawa.high_speed_e_server.position_command_classification import PositionCommandClassification
+from underautomation.yaskawa.high_speed_e_server.position_command_operation_coordinate import PositionCommandOperationCoordinate
+
+robot.high_speed_e_server.servo_command(OnOffCommandType.Servo, True)
+
+# Cartesian move: mm and degrees, speed in mm/s, in the robot coordinate system
+robot.high_speed_e_server.move_cartesian(
+    1000, 10, 0, 0, 0, 0,
+    PositionCommandClassification.Cartesian_MM_S, 10,
+    PositionCommandOperationCoordinate.Robot)
+
+# Joint move: pulses of each axis, speed in % of the maximum speed
+robot.high_speed_e_server.move_joints([1000, 0, 0, 0, 0, 0], PositionCommandClassification.LinkPercent, 10)
+```
+
+### Jobs
+
+```python
+robot.high_speed_e_server.select_job("PROGRAM", 0)
+robot.high_speed_e_server.start_job()
+
+job = robot.high_speed_e_server.get_executing_job_information()
+print(job.name, job.line, job.step)
+```
+
+### Variables
+
+```python
+registers = robot.high_speed_e_server.read_register(0, 5)
+print(list(registers.value))
+
+robot.high_speed_e_server.write_register(0, [100, 200])
+
+reals = robot.high_speed_e_server.read_real(0, 4)
+strings = robot.high_speed_e_server.read16_bytes_char(0, 2)
+positions = robot.high_speed_e_server.read_position_variable(1, 4)
+```
+
+### Files
+
+```python
+files = robot.high_speed_e_server.get_file_list("*.JBI").files
+print(list(files))
+
+content = robot.high_speed_e_server.get_file("PROGRAM.JBI").content
+```
+
+## Examples
+
+The folder [`examples`](examples) contains scripts ready to run. The first run asks the IP address of the
+robot and saves it in `examples/robot_config.json` (ignored by git). The shared helper
+[`examples/__init__.py`](examples/__init__.py) sets the Python path, manages this file and registers the
+license.
+
+Run a script from the root of the repository, or browse them with the launcher:
+
+```bash
+python examples/high_speed_e_server/hses_get_status.py
+python examples/launcher.py
+```
+
+| Script | What it does |
+| --- | --- |
+| [`hses_get_status.py`](examples/high_speed_e_server/hses_get_status.py) | Status of the controller: mode, servo, alarm, hold. |
+| [`hses_get_cartesian_position.py`](examples/high_speed_e_server/hses_get_cartesian_position.py) | Cartesian position (X, Y, Z, Rx, Ry, Rz). |
+| [`hses_get_joint_position.py`](examples/high_speed_e_server/hses_get_joint_position.py) | Joint position, in pulses. |
+| [`hses_read_alarms.py`](examples/high_speed_e_server/hses_read_alarms.py) | Last alarms with their code, type and text. |
+| [`hses_alarm_reset.py`](examples/high_speed_e_server/hses_alarm_reset.py) | Resets the alarm or cancels the error. |
+| [`hses_get_executing_job.py`](examples/high_speed_e_server/hses_get_executing_job.py) | Name, line and speed override of the executing job. |
+| [`hses_select_start_job.py`](examples/high_speed_e_server/hses_select_start_job.py) | Selects a job by name and starts it. |
+| [`hses_read_write_registers.py`](examples/high_speed_e_server/hses_read_write_registers.py) | Reads and writes registers. |
+| [`hses_read_write_integers.py`](examples/high_speed_e_server/hses_read_write_integers.py) | Reads and writes integer variables. |
+| [`hses_read_write_reals.py`](examples/high_speed_e_server/hses_read_write_reals.py) | Reads and writes real variables. |
+| [`hses_read_write_bytes.py`](examples/high_speed_e_server/hses_read_write_bytes.py) | Reads and writes byte variables. |
+| [`hses_read_write_strings.py`](examples/high_speed_e_server/hses_read_write_strings.py) | Reads and writes string variables (16 and 32 bytes). |
+| [`hses_read_write_io.py`](examples/high_speed_e_server/hses_read_write_io.py) | Reads and writes I/O signals (general, external, network). |
+| [`hses_read_write_position_variables.py`](examples/high_speed_e_server/hses_read_write_position_variables.py) | Reads and writes position variables. |
+| [`hses_move_cartesian.py`](examples/high_speed_e_server/hses_move_cartesian.py) | Moves the robot to a Cartesian position. |
+| [`hses_move_joints.py`](examples/high_speed_e_server/hses_move_joints.py) | Moves the robot to joint pulse values. |
+| [`hses_servo_command.py`](examples/high_speed_e_server/hses_servo_command.py) | Servo on and off. |
+| [`hses_display_message.py`](examples/high_speed_e_server/hses_display_message.py) | Shows a message on the pendant. |
+| [`hses_get_system_info.py`](examples/high_speed_e_server/hses_get_system_info.py) | Software version and name of the system. |
+| [`hses_position_error_torque.py`](examples/high_speed_e_server/hses_position_error_torque.py) | Position error and torque of each axis. |
+| [`hses_file_operations.py`](examples/high_speed_e_server/hses_file_operations.py) | Lists, downloads, uploads and deletes files. |
+| [`license_info_example.py`](examples/license/license_info_example.py) | State of the license, and registration of a key. |
+
+The motion examples move the robot. Check the surroundings of the robot first.
+
+## Configure the robot
+
+The read functions work in any mode. The commands (servo, motion, job start, file write) need these
+settings on the controller, in Security mode. The [Yaskawa.NET README](https://github.com/underautomation/Yaskawa.NET#configure-the-robot)
+shows them with screenshots.
+
+- **Remote commands:** `IN/OUT` > `PSEUDO INPUT SIGNAL`, select `#82015 CMD REMOTE SEL` with
+  `INTER LOCK` + `SELECT`.
+- **Key in the remote position:** the commands need the key of the pendant in the remote position. With
+  the ladder editor, copy `#80011` to `#40042`.
+- **Job selection:** `SETUP` > `FUNCTION ENABLE`, set `JOB SELECT WHEN REMOTE AND PLAY` to `PERMIT`.
+- **File overwrite:** `PARAMETER` > `RS`, set `RS029` to `1` and `RS214` to `1`.
+
+## Compatibility
+
+- **Python:** 3.7 to 3.13, with pythonnet 3.0.5.
+- **Operating systems:** Windows (.NET Framework), Linux and macOS (.NET runtime and `export PYTHONNET_RUNTIME=coreclr`).
+- **Controllers:** Yaskawa YRC1000 (micro), MOTOMAN NEXT, DX100 / DX200, FS100, ERC / XRC / MRC, with the High Speed Ethernet Server.
+
+## License
+
+This SDK needs a commercial license. A 30-day trial starts at the first use, no key needed. After the
+trial, register your key in your code:
 
 ```python
 from underautomation.yaskawa.yaskawa_robot import YaskawaRobot
 
-license_info = YaskawaRobot.register_license("your-licensee", "your-license-key")
-print(license_info)
+license_info = YaskawaRobot.register_license("Your Company", "your-license-key")
+print(license_info.state)
 ```
 
----
+- License agreement: [underautomation.com/yaskawa/eula](https://underautomation.com/yaskawa/eula) and [License.md](License.md)
+- Trial key: [underautomation.com/license](https://underautomation.com/license?sdk=yaskawa)
+- Prices and quote: [underautomation.com/yaskawa](https://underautomation.com/yaskawa)
 
-## 📂 Examples
+## Support
 
-The repository includes a complete set of ready-to-run examples in the [`examples/`](https://github.com/underautomation/yaskawa.py/tree/main/examples) folder, organized by category.
-
-### How the Examples Work
-
-| File                                                                                                   | Role                                                                                                                     |
-| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| [`examples/launcher.py`](https://github.com/underautomation/yaskawa.py/blob/main/examples/launcher.py) | **Interactive menu** - browse and run any example from a single launcher                                                 |
-| [`examples/__init__.py`](https://github.com/underautomation/yaskawa.py/blob/main/examples/__init__.py) | **Shared helpers** - sets up the Python path, manages robot connection settings, and handles license registration        |
-| `examples/robot_config.json`                                                                           | **Saved settings** (git-ignored) - remembers your robot IP and license key so you don't have to re-enter them every time |
-
-**Run any example directly:**
-
-> The first time you run an example, it will ask for your robot IP. This is saved in `robot_config.json` so you only enter it once.
-
-```bash
-# Run any example directly
-python examples/high_speed_e_server/hses_get_status.py
-```
-
-**Or browse examples with the launcher:**
-
-Use the launcher to easily browse and run any example without needing to open each file.
-
-```bash
-# Launch the interactive menu
-python examples/launcher.py
-```
-
-### 📡 High Speed Ethernet Server Examples
-
-| Example                                                                                                       | Description                                             |
-| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| [`hses_get_status.py`](examples/high_speed_e_server/hses_get_status.py)                                       | Read robot status: mode, servo, alarms, hold state      |
-| [`hses_get_cartesian_position.py`](examples/high_speed_e_server/hses_get_cartesian_position.py)               | Read current TCP position (X, Y, Z, Rx, Ry, Rz)         |
-| [`hses_get_joint_position.py`](examples/high_speed_e_server/hses_get_joint_position.py)                       | Read current joint position (pulse values)              |
-| [`hses_read_alarms.py`](examples/high_speed_e_server/hses_read_alarms.py)                                     | Read active alarms with code, type, and message         |
-| [`hses_alarm_reset.py`](examples/high_speed_e_server/hses_alarm_reset.py)                                     | Reset alarms (standard or error reset)                  |
-| [`hses_get_executing_job.py`](examples/high_speed_e_server/hses_get_executing_job.py)                         | Get currently executing job name, line, and speed       |
-| [`hses_select_start_job.py`](examples/high_speed_e_server/hses_select_start_job.py)                           | Select a job by name and start it                       |
-| [`hses_read_write_registers.py`](examples/high_speed_e_server/hses_read_write_registers.py)                   | Read and write numeric registers                        |
-| [`hses_read_write_integers.py`](examples/high_speed_e_server/hses_read_write_integers.py)                     | Read and write integer variables                        |
-| [`hses_read_write_reals.py`](examples/high_speed_e_server/hses_read_write_reals.py)                           | Read and write real (float) variables                   |
-| [`hses_read_write_bytes.py`](examples/high_speed_e_server/hses_read_write_bytes.py)                           | Read and write byte variables                           |
-| [`hses_read_write_strings.py`](examples/high_speed_e_server/hses_read_write_strings.py)                       | Read and write string variables (16 & 32 bytes)         |
-| [`hses_read_write_io.py`](examples/high_speed_e_server/hses_read_write_io.py)                                 | Read and write I/O signals (general, external, network) |
-| [`hses_read_write_position_variables.py`](examples/high_speed_e_server/hses_read_write_position_variables.py) | Read and write position variables (P variables)         |
-| [`hses_move_cartesian.py`](examples/high_speed_e_server/hses_move_cartesian.py)                               | Move robot to a Cartesian position                      |
-| [`hses_move_joints.py`](examples/high_speed_e_server/hses_move_joints.py)                                     | Move robot by specifying joint pulse values             |
-| [`hses_servo_command.py`](examples/high_speed_e_server/hses_servo_command.py)                                 | Send servo ON/OFF commands                              |
-| [`hses_display_message.py`](examples/high_speed_e_server/hses_display_message.py)                             | Display a message on the teach pendant                  |
-| [`hses_get_system_info.py`](examples/high_speed_e_server/hses_get_system_info.py)                             | Read system information (software version, name)        |
-| [`hses_position_error_torque.py`](examples/high_speed_e_server/hses_position_error_torque.py)                 | Read position error and torque for each axis            |
-| [`hses_file_operations.py`](examples/high_speed_e_server/hses_file_operations.py)                             | List, download, upload, and delete files                |
-
-### 🔑 License Examples
-
-| Example                                                               | Description                                            |
-| --------------------------------------------------------------------- | ------------------------------------------------------ |
-| [`license_info_example.py`](examples/license/license_info_example.py) | Display license state and details, handle registration |
-
----
-
-## 🔧 Robot Configuration
-
-Some features require specific controller settings.
-
-### ✅ Enable Remote Control
-
-1. Go to `IN/OUT > PSEUDO INPUT SIGNAL`
-2. Set `#82015 CMD REMOTE SEL` via `INTERLOCK + SELECT`
-
-### ✅ Key Position for Commands
-
-- Use physical pendant key in remote position
-- Optional Ladder setup: copy `#80011` to `#40042`
-
-### ✅ Job Select
-
-1. Go to `SETUP > FUNCTION ENABLE`
-2. Set `JOB SELECT WHEN REMOTE AND PLAY` to `PERMIT`
-
-### ✅ File Overwrite Permissions
-
-1. Go to `PARAMETER > RS`
-2. Set `RS029 = 1`, `RS214 = 1`
-
----
-
-## 🔍 Compatibility
-
-|                       | Supported                                   |
-| --------------------- | ------------------------------------------- |
-| **Robot Controllers** | DX200, YRC1000, YRC1000 Micro               |
-| **OS**                | Windows, Linux, macOS                       |
-| **Python**            | 3.7+                                        |
-| **Dependency**        | `pythonnet 3.0.5` (installed automatically) |
-
----
-
-## 📢 Contributing
-
-We welcome your feedback and contributions!
-
-- Report issues via [GitHub Issues](https://github.com/underautomation/Yaskawa.py/issues)
-- Submit pull requests with enhancements
-- Suggest features and improvements
-
----
-
-## 📜 License
-
-**⚠️ This SDK requires a commercial license.**
-
-- 🆓 **30-day free trial** included out of the box
-- 🔄 **Get a new trial immediately** at [underautomation.com/license](https://underautomation.com/license?sdk=yaskawa)
-- 🛒 **Buy a license** at [underautomation.com/yaskawa](https://underautomation.com/yaskawa)
-- 📄 **EULA**: [underautomation.com/yaskawa/eula](https://underautomation.com/yaskawa/eula)
-
----
-
-## 📬 Need Help?
-
-- 📖 **Documentation**: [underautomation.com/yaskawa/documentation](https://underautomation.com/yaskawa/documentation)
-- 🐍 **Python Get Started Guide**: [underautomation.com/yaskawa/documentation/get-started-python](https://underautomation.com/yaskawa/documentation/get-started-python)
-- 📦 **PyPI Package**: [pypi.org/project/UnderAutomation.Yaskawa](https://pypi.org/project/UnderAutomation.Yaskawa/)
-- 📩 **Contact Us**: [underautomation.com/contact](https://underautomation.com/contact)
+- Documentation: [underautomation.com/yaskawa/documentation](https://underautomation.com/yaskawa/documentation)
+- Issues: [GitHub Issues](https://github.com/underautomation/Yaskawa.py/issues)
+- Contact: [underautomation.com/contact](https://underautomation.com/contact)

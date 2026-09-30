@@ -310,7 +310,7 @@ def test_load_file_with_all_arguments(hses):
     """
     content = "/// TEST PROGRAM WITH PROGRESS\nNOP\nEND\n"
 
-    def on_progress():
+    def on_progress(progress):
         # No need to do anything in tests
         pass
 
