@@ -19,13 +19,13 @@ robot = connect_robot()
 try:
     print("\nAlarm reset types:")
     print("  1. Reset (standard alarm reset)")
-    print("  2. Error Reset")
+    print("  2. Cancel (error message)")
 
     choice = input("\nSelect reset type [1]: ").strip()
 
     if choice == "2":
-        reset_type = AlarmResetType.ErrorReset
-        type_name = "Error Reset"
+        reset_type = AlarmResetType.Cancel
+        type_name = "Cancel"
     else:
         reset_type = AlarmResetType.Reset
         type_name = "Reset"
