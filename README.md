@@ -322,9 +322,17 @@ The motion examples and `eserver_run_job.py` move the robot. Check the surroundi
 ## Configure the robot
 
 The read functions work in any mode. The commands (servo, motion, job start, file write) need these
-settings on the controller, in Security mode. The [Yaskawa.NET README](https://github.com/underautomation/Yaskawa.NET#configure-the-robot)
-shows them with screenshots.
+settings on the controller, with the security mode set to `MANAGEMENT`. The
+[website](https://underautomation.com/yaskawa/documentation/connect#prepare_the_controller) shows them with
+screenshots.
 
+- **Ethernet function:** start the controller in maintenance mode (hold `MAIN MENU` at power on), then
+  `SYSTEM` > `SETUP` > `OPTION FUNCTION` > `NETWORK FUNCTION SETTING`: set `ETHERNET` to `USED`, `FTP` and
+  `ETHERNET SERVER` to `EXPANDED`. The IP address is in `LAN INTERFACE SETTING`.
+- **Parameters:** `RS000` = `2`, `RS005` = `1`, `RS007` = `2`, `RS022` = `1`, `RS029` = `1`. Keep the
+  timers `RS034` and `RS035` at `200` ms, their factory value. To write the I/O and the variables in play
+  mode: `S2C409` = `1` on DX100 and FS100, `S2C541` = `0` and `S2C542` = `0` on DX200, YRC1000 and
+  YRC1000micro.
 - **Remote commands:** `IN/OUT` > `PSEUDO INPUT SIGNAL`, select `#82015 CMD REMOTE SEL` with
   `INTER LOCK` + `SELECT`.
 - **Key in the remote position:** the commands need the key of the pendant in the remote position. With
