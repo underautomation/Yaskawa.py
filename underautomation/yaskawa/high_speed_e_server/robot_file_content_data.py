@@ -13,6 +13,13 @@ class RobotFileContentData(RobotData):
 			self._instance = _internal
 
 	def get_param(self, section: str, parameterLine: int, parameterColumn: int) -> int:
+		'''Extracts an integer parameter value from a structured file section. Useful for reading values from parameter files and job data.
+
+		:param section: The section name without the "///" prefix (e.g., "INST", "POS").
+		:param parameterLine: Zero-based line number within the section.
+		:param parameterColumn: Zero-based column number (comma-separated values).
+		:returns: The integer value at the specified location.
+		'''
 		return self._instance.GetParam(section, parameterLine, parameterColumn)
 
 	@property

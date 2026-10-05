@@ -1,5 +1,18 @@
 from __future__ import annotations
 import typing
+from underautomation.yaskawa.common.i_robot_client import IRobotClient
+from underautomation.yaskawa.common.i_status_reader import IStatusReader
+from underautomation.yaskawa.common.i_yaskawa_client import IYaskawaClient
+from underautomation.yaskawa.common.i_position_reader import IPositionReader
+from underautomation.yaskawa.common.i_alarm_reader import IAlarmReader
+from underautomation.yaskawa.common.i_robot_control import IRobotControl
+from underautomation.yaskawa.common.iio_access import IIOAccess
+from underautomation.yaskawa.common.i_variable_access import IVariableAccess
+from underautomation.yaskawa.common.i_torque_reader import ITorqueReader
+from underautomation.yaskawa.common.i_motion_control import IMotionControl
+from underautomation.yaskawa.common.i_file_manager import IFileManager
+from underautomation.yaskawa.common.i_file_reader import IFileReader
+from underautomation.yaskawa.common.i_file_writer import IFileWriter
 from underautomation.yaskawa.high_speed_e_server.robot_alarm_data import RobotAlarmData
 from underautomation.yaskawa.high_speed_e_server.robot_recent_alarm import RobotRecentAlarm
 from underautomation.yaskawa.high_speed_e_server.robot_status_data import RobotStatusData
@@ -41,6 +54,9 @@ from underautomation.yaskawa.high_speed_e_server.robot_posture import RobotPostu
 from underautomation.yaskawa.high_speed_e_server.position_command_type import PositionCommandType
 from underautomation.yaskawa.high_speed_e_server.robot_file_list_data import RobotFileListData
 from underautomation.yaskawa.high_speed_e_server.robot_file_content_data import RobotFileContentData
+from underautomation.yaskawa.common.robot_cycle_type import RobotCycleType
+from underautomation.yaskawa.high_speed_e_server.load_file_progress import LoadFileProgress
+from underautomation.yaskawa.high_speed_e_server.get_file_progress import GetFileProgress
 from UnderAutomation.Yaskawa.HighSpeedEServer.Internal import HighSpeedEServerClientBase as high_speed_e_server_client_base
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotRecentAlarm as robot_recent_alarm
 from UnderAutomation.Yaskawa.HighSpeedEServer import AlarmResetType as alarm_reset_type
@@ -52,9 +68,10 @@ from UnderAutomation.Yaskawa.Common import IOType as io_type
 from UnderAutomation.Yaskawa.HighSpeedEServer import PositionCommandClassification as position_command_classification
 from UnderAutomation.Yaskawa.HighSpeedEServer import PositionCommandOperationCoordinate as position_command_operation_coordinate
 from UnderAutomation.Yaskawa.HighSpeedEServer import PositionCommandType as position_command_type
+from UnderAutomation.Yaskawa.Common import RobotCycleType as robot_cycle_type
 
-class HighSpeedEServerClientBase:
-	'''Base class implementing the High Speed Ethernet Server protocol for Yaskawa robot communication. Provides methods for reading robot status, positions, variables, and executing commands via UDP.'''
+class HighSpeedEServerClientBase(IRobotClient, IFileManager):
+	'''Base class of the High Speed Ethernet Server client of a Yaskawa robot controller. Provides methods for reading robot status, positions, variables, and executing commands via UDP.'''
 	def __init__(self, _internal = 0):
 		if(_internal == 0):
 			self._instance = high_speed_e_server_client_base()
@@ -95,13 +112,29 @@ class HighSpeedEServerClientBase:
 		'''
 		return RobotJobStackData(self._instance.GetJobStack(taskNumber))
 
-	def get_configuration_information(self, type: RobotControlGroup) -> RobotAxisConfigData:
-		'''Reads axis configuration information for a specified control group. Returns axis type names (e.g., "S", "L", "U", "R", "B", "T") for each axis.
+	@typing.overload
+	def get_configuration_information(self, type: RobotControlGroup) -> RobotAxisConfigData: ...
 
+	@typing.overload
+	def get_configuration_information(self) -> RobotAxisConfigData: ...
+
+	def get_configuration_information(self, *args, **kwargs) -> RobotAxisConfigData:
+		'''Reads axis configuration information for a specified control group. Returns axis type names (e.g., "S", "L", "U", "R", "B", "T") for each axis.
+		Reads axis configuration information for the default robot control group. Returns axis type names for each of the 8 possible axes.
+
+		Arguments: (type)
+		Arguments: ()
 		:param type: Control group to query (robot, base, station).
 		:returns: Axis configuration data with axis type names.
 		'''
-		return RobotAxisConfigData(self._instance.GetConfigurationInformation(type._instance if type else None))
+		__a = _bind_overload(args, kwargs, ['type'], {})
+		if __a is not None:
+			type, = __a
+			return RobotAxisConfigData(self._instance.GetConfigurationInformation(type._instance if type else None))
+		__a = _bind_overload(args, kwargs, [], {})
+		if __a is not None:
+			return RobotAxisConfigData(self._instance.GetConfigurationInformation())
+		raise TypeError("get_configuration_information(): no overload takes these arguments")
 
 	def get_robot_cartesian_position(self) -> RobotPositionCartesianData:
 		'''Reads the current robot Cartesian position (TCP position and orientation). Coordinates are returned in millimeters for X, Y, Z and degrees for Rx, Ry, Rz.
@@ -125,21 +158,53 @@ class HighSpeedEServerClientBase:
 		'''
 		return RobotPositionIntData(None, self._instance.GetRobotPosition(type._instance if type else None))
 
-	def get_position_error(self, type: RobotControlGroup) -> RobotAxisIntData:
-		'''Reads the position error for a specified control group. Position error indicates the difference between commanded and actual position.
+	@typing.overload
+	def get_position_error(self, type: RobotControlGroup) -> RobotAxisIntData: ...
 
+	@typing.overload
+	def get_position_error(self) -> RobotAxisIntData: ...
+
+	def get_position_error(self, *args, **kwargs) -> RobotAxisIntData:
+		'''Reads the position error for a specified control group. Position error indicates the difference between commanded and actual position.
+		Reads the position error (difference between commanded and actual position) for the default robot. Values indicate servo tracking error in pulse units.
+
+		Arguments: (type)
+		Arguments: ()
 		:param type: Control group to query.
 		:returns: Position error data with axis error values in pulses.
 		'''
-		return RobotAxisIntData(self._instance.GetPositionError(type._instance if type else None))
+		__a = _bind_overload(args, kwargs, ['type'], {})
+		if __a is not None:
+			type, = __a
+			return RobotAxisIntData(self._instance.GetPositionError(type._instance if type else None))
+		__a = _bind_overload(args, kwargs, [], {})
+		if __a is not None:
+			return RobotAxisIntData(self._instance.GetPositionError())
+		raise TypeError("get_position_error(): no overload takes these arguments")
 
-	def get_torque(self, type: RobotControlGroup) -> RobotAxisIntData:
+	@typing.overload
+	def get_torque(self, type: RobotControlGroup) -> RobotAxisIntData: ...
+
+	@typing.overload
+	def get_torque(self) -> RobotAxisIntData: ...
+
+	def get_torque(self, *args, **kwargs) -> RobotAxisIntData:
 		'''Reads the current torque values for a specified control group's servo motors. Torque values indicate motor load as a percentage of rated torque.
+		Reads the current torque values for the default robot's servo motors. Torque values indicate motor load as a percentage of rated torque.
 
+		Arguments: (type)
+		Arguments: ()
 		:param type: Control group to query.
 		:returns: Torque data with axis torque values.
 		'''
-		return RobotAxisIntData(self._instance.GetTorque(type._instance if type else None))
+		__a = _bind_overload(args, kwargs, ['type'], {})
+		if __a is not None:
+			type, = __a
+			return RobotAxisIntData(self._instance.GetTorque(type._instance if type else None))
+		__a = _bind_overload(args, kwargs, [], {})
+		if __a is not None:
+			return RobotAxisIntData(self._instance.GetTorque())
+		raise TypeError("get_torque(): no overload takes these arguments")
 
 	def alarm_reset(self, type: AlarmResetType) -> RobotDataHeader:
 		'''Resets alarms or cancels errors on the robot controller. Use Reset to clear alarm conditions after resolving the cause. Use Cancel for recoverable errors that don't require alarm reset.
@@ -199,13 +264,29 @@ class HighSpeedEServerClientBase:
 		'''
 		return RobotManagementTimeData(self._instance.GetManagementTime(management_time_type(int(type)), index))
 
-	def get_system_information(self, type: RobotSystemTypeData) -> RobotSystemInformation:
-		'''Retrieves system information for a specific robot system or control group. Use for multi-robot controllers or to query specific axes groups.
+	@typing.overload
+	def get_system_information(self, type: RobotSystemTypeData) -> RobotSystemInformation: ...
 
+	@typing.overload
+	def get_system_information(self) -> RobotSystemInformation: ...
+
+	def get_system_information(self, *args, **kwargs) -> RobotSystemInformation:
+		'''Retrieves system information for a specific robot system or control group. Use for multi-robot controllers or to query specific axes groups.
+		Retrieves system information about the default robot system (R1). Returns software version, robot name, and parameter file information.
+
+		Arguments: (type)
+		Arguments: ()
 		:param type: Robot system type specifier (e.g., R1, R2, S1, etc.).
 		:returns: System information including software version, robot name, and parameter file.
 		'''
-		return RobotSystemInformation(self._instance.GetSystemInformation(type._instance if type else None))
+		__a = _bind_overload(args, kwargs, ['type'], {})
+		if __a is not None:
+			type, = __a
+			return RobotSystemInformation(self._instance.GetSystemInformation(type._instance if type else None))
+		__a = _bind_overload(args, kwargs, [], {})
+		if __a is not None:
+			return RobotSystemInformation(self._instance.GetSystemInformation())
+		raise TypeError("get_system_information(): no overload takes these arguments")
 
 	def get_system_parameter(self, type: SystemParameterTypes, number: int, group: int=1) -> RobotSystemParamData:
 		'''Reads a system parameter from the robot controller.
@@ -217,25 +298,61 @@ class HighSpeedEServerClientBase:
 		'''
 		return RobotSystemParamData(self._instance.GetSystemParameter(system_parameter_types(int(type)), number, group))
 
-	def read_io(self, type: IOType, group: int, count: int) -> RobotIOData:
-		'''Reads multiple I/O bytes from the robot controller using I/O group addressing. The starting byte index is computed from the I/O type and group number.
+	@typing.overload
+	def read_io(self, type: IOType, group: int, count: int) -> RobotIOData: ...
 
+	@typing.overload
+	def read_io(self, firstIndex: int, count: int) -> RobotIOData: ...
+
+	def read_io(self, *args, **kwargs) -> RobotIOData:
+		'''Reads multiple I/O bytes from the robot controller using I/O group addressing. The starting byte index is computed from the I/O type and group number.
+		Reads multiple I/O bytes from the robot controller starting at a specified index.
+
+		Arguments: (type, group, count)
+		Arguments: (firstIndex, count)
 		:param type: The I/O signal category.
 		:param group: 1-based group number within the I/O type.
 		:param count: Number of bytes to read (will be rounded up to nearest even number).
+		:param firstIndex: Starting I/O index. Valid ranges: 1-512: Robot user input signal1001-1512: Robot user output signal2001-2512: External input signal2701-2956: Network input signal3001-3512: External output signal3701-3956: Network output signal4001-4160: Robot system input signal5001-5300: Robot system output signal6001-6064: Interface panel input signal7001-7999: Auxiliary relay signal8001-8128: Robot control status signal.
 		:returns: Plural data containing array of I/O byte values.
 		'''
-		return RobotIOData(self._instance.ReadIO(io_type(int(type)), group, count))
+		__a = _bind_overload(args, kwargs, ['type', 'group', 'count'], {})
+		if __a is not None:
+			type, group, count = __a
+			return RobotIOData(self._instance.ReadIO(io_type(int(type)), group, count))
+		__a = _bind_overload(args, kwargs, ['firstIndex', 'count'], {})
+		if __a is not None:
+			firstIndex, count = __a
+			return RobotIOData(self._instance.ReadIO(firstIndex, count))
+		raise TypeError("read_io(): no overload takes these arguments")
 
-	def write_io(self, type: IOType, group: int, data: typing.List[int]) -> RobotDataHeader:
+	@typing.overload
+	def write_io(self, type: IOType, group: int, data: typing.List[int]) -> RobotDataHeader: ...
+
+	@typing.overload
+	def write_io(self, firstIndex: int, data: typing.List[int]) -> RobotDataHeader: ...
+
+	def write_io(self, *args, **kwargs) -> RobotDataHeader:
 		'''Writes I/O bytes to the robot controller using I/O group addressing. By default, only Network Input can be written The starting byte index is computed from the I/O type and group number.
+		Writes I/O bytes to the robot controller starting at a specified index.
 
+		Arguments: (type, group, data)
+		Arguments: (firstIndex, data)
 		:param type: The I/O signal category.
 		:param group: 1-based group number within the I/O type.
 		:param data: Data array to write (must contain an even number of elements).
+		:param firstIndex: Starting I/O index. See ReadIO for valid ranges.
 		:returns: Response header indicating success.
 		'''
-		return RobotDataHeader(self._instance.WriteIO(io_type(int(type)), group, data))
+		__a = _bind_overload(args, kwargs, ['type', 'group', 'data'], {})
+		if __a is not None:
+			type, group, data = __a
+			return RobotDataHeader(self._instance.WriteIO(io_type(int(type)), group, data))
+		__a = _bind_overload(args, kwargs, ['firstIndex', 'data'], {})
+		if __a is not None:
+			firstIndex, data = __a
+			return RobotDataHeader(self._instance.WriteIO(firstIndex, data))
+		raise TypeError("write_io(): no overload takes these arguments")
 
 	def write_io_network_input(self, group: int, data: typing.List[int]) -> RobotDataHeader:
 		'''Writes network input bytes to the robot controller
@@ -355,9 +472,9 @@ class HighSpeedEServerClientBase:
 		return RobotDataHeader(self._instance.Write16BytesChar(firstIndex, data))
 
 	def read_position_variable(self, firstIndex: int, count: int) -> RobotPositionVariableData:
-		'''Reads multiple position variables (P variables) from the robot controller. Position variables store complete robot poses including position, orientation, and configuration.
+		'''Reads multiple position variables (P variables) from the robot controller. Each variable is a pulse position or a Cartesian position (base, robot, tool or user frame), with its posture, tool number and user frame number.
 
-		:param firstIndex: Starting position variable index.
+		:param firstIndex: Index of the first position variable (0 to 127 with the standard settings, P000 is index 0).
 		:param count: Number of position variables to read.
 		:returns: Plural data containing array of position data.
 		'''
@@ -373,9 +490,9 @@ class HighSpeedEServerClientBase:
 		return RobotDataHeader(self._instance.WritePositionVariable(firstIndex, [x._instance if x else None for x in data]))
 
 	def read_base_position(self, firstIndex: int, count: int) -> RobotBasePositionVariableData:
-		'''Reads multiple base position variables (BP variables) from the robot controller. Base position variables define reference coordinate frames for robot operations.
+		'''Reads multiple base position variables (BP variables) from the robot controller. Base position variables store the position of the base axes (travel axis) of a robot.
 
-		:param firstIndex: Starting base position variable index.
+		:param firstIndex: Index of the first base position variable (0 to 127 with the standard settings).
 		:param count: Number of base position variables to read.
 		:returns: Plural data containing array of base position data.
 		'''
@@ -391,15 +508,21 @@ class HighSpeedEServerClientBase:
 		return RobotDataHeader(self._instance.WriteBasePosition(firstIndex, [x._instance if x else None for x in data]))
 
 	def read_external_position(self, firstIndex: int, count: int) -> RobotExternalAxisVariableData:
-		'''Reads multiple external axis variables (EX variables) from the robot controller. External axis variables store positions for additional axes beyond the main robot arm.
+		'''Reads multiple external axis variables (EX variables) from the robot controller. External axis variables store the position of the station axes (positioner...), in encoder pulses.
 
-		:param firstIndex: Starting external axis variable index.
+		:param firstIndex: Index of the first external axis variable (0 to 127 with the standard settings).
 		:param count: Number of external axis variables to read.
 		:returns: Plural data containing array of external axis position data.
 		'''
 		return RobotExternalAxisVariableData(self._instance.ReadExternalPosition(firstIndex, count))
 
-	def write_external_position(self, firstIndex: int, data: typing.List[RobotAxisRawData1]) -> RobotDataHeader:
+	def write_external_position(self, firstIndex: int, data: typing.List[RobotAxisRawData1] | typing.List[RobotExternalAxisData]) -> RobotDataHeader:
+		'''Writes external axis variables (EX variables) to the robot controller.
+
+		:param firstIndex: Starting external axis variable index.
+		:param data: Array of external axis position data to write.
+		:returns: Response header indicating success.
+		'''
 		return RobotDataHeader(self._instance.WriteExternalPosition(firstIndex, [x._instance if x else None for x in data]))
 
 	def get_alarm_extended(self, alarm: RobotRecentAlarm) -> RobotAlarmDataExtended:
@@ -472,8 +595,8 @@ class HighSpeedEServerClientBase:
 		'''
 		return RobotDataHeader(self._instance.DeleteFile(name))
 
-	def load_file(self, name: str, content: str, onLoadFileProgress: typing.Any=None) -> typing.List[RobotDataHeader]:
-		return [RobotDataHeader(x) for x in self._instance.LoadFile(name, content, onLoadFileProgress)]
+	def load_file(self, name: str, content: str, onLoadFileProgress: typing.Callable[[LoadFileProgress], None]=None) -> typing.List[RobotDataHeader]:
+		return [RobotDataHeader(x) for x in self._instance.LoadFile(name, content, (onLoadFileProgress._instance if hasattr(onLoadFileProgress, '_instance') else high_speed_e_server_client_base.LoadFileProgressDelegate(lambda _x0: onLoadFileProgress(LoadFileProgress(_x0)))) if onLoadFileProgress else None)]
 
 	def get_file_list(self, pattern: str) -> RobotFileListData:
 		'''Retrieves a list of files matching a pattern from the robot controller. Supports wildcards for matching multiple files.
@@ -483,8 +606,8 @@ class HighSpeedEServerClientBase:
 		'''
 		return RobotFileListData(self._instance.GetFileList(pattern))
 
-	def get_file(self, name: str, onGetFileProgress: typing.Any=None) -> RobotFileContentData:
-		return RobotFileContentData(self._instance.GetFile(name, onGetFileProgress))
+	def get_file(self, name: str, onGetFileProgress: typing.Callable[[GetFileProgress], None]=None) -> RobotFileContentData:
+		return RobotFileContentData(self._instance.GetFile(name, (onGetFileProgress._instance if hasattr(onGetFileProgress, '_instance') else high_speed_e_server_client_base.GetFileProgressDelegate(lambda _x0: onGetFileProgress(GetFileProgress(_x0)))) if onGetFileProgress else None))
 
 	def batch_data_backup(self, file: str="/SPDRV/CMOSBK.BIN") -> RobotDataHeader:
 		'''Performs a backup of the robot's CMOS. The CMOS.BIN file is copied locally in the robot controller to "/SPDRC/CMOSBK.BIN". The operation can take several seconds to complete. After this command, the backup file can be downloaded using GetFile("/SPDRC/CMOSBK.BIN"). To enable this command : in "MANAGEMENT MODE", select {SETUP} - {AUTO BACKUP SET} and set "DEVICE" to "RAMDISK". If this menu is not available, Reboot the controller in Maintenance Mode and set System / Setup / OPTION FUNCTION / AUTOBACKUP to "Used", then do a "Safety board flash reset" from File / Initialize
@@ -492,6 +615,38 @@ class HighSpeedEServerClientBase:
 		:param file: Controller backup file path for CMOS.BIN copy
 		'''
 		return RobotDataHeader(self._instance.BatchDataBackup(file))
+
+	def set_servo(self, enable: bool) -> RobotDataHeader:
+		'''Enables or disables servo power.
+
+		:param enable: True to enable servo power, false to disable.
+		:returns: Response header indicating success.
+		'''
+		return RobotDataHeader(self._instance.SetServo(enable))
+
+	def set_hold(self, enable: bool) -> RobotDataHeader:
+		'''Sets the hold state of the robot.
+
+		:param enable: True to hold (pause), false to release hold.
+		:returns: Response header indicating success.
+		'''
+		return RobotDataHeader(self._instance.SetHold(enable))
+
+	def set_teach_pendant_lock_state(self, locked: bool) -> RobotDataHeader:
+		'''Locks or unlocks the teach pendant.
+
+		:param locked: True to lock, false to unlock.
+		:returns: Response header indicating success.
+		'''
+		return RobotDataHeader(self._instance.SetTeachPendantLockState(locked))
+
+	def set_cycle(self, cycle: RobotCycleType) -> RobotDataHeader:
+		'''Sets the execution cycle type.
+
+		:param cycle: Target cycle type.
+		:returns: Response header indicating success.
+		'''
+		return RobotDataHeader(self._instance.SetCycle(robot_cycle_type(int(cycle))))
 
 	@property
 	def ip(self) -> str:
@@ -516,3 +671,16 @@ class HighSpeedEServerClientBase:
 
 	def __hash__(self) -> int:
 		return self._instance.GetHashCode() if self._instance is not None else 0
+
+def _bind_overload(args, kwargs, names, defaults):
+	if len(args) > len(names) or any(k not in names[len(args):] for k in kwargs):
+		return None
+	values = list(args)
+	for name in names[len(args):]:
+		if name in kwargs:
+			values.append(kwargs[name])
+		elif name in defaults:
+			values.append(defaults[name])
+		else:
+			return None
+	return values

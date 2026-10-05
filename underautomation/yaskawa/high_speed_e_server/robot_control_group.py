@@ -13,7 +13,7 @@ class RobotControlGroup:
 		:param index: The index within the group (1-based).
 		'''
 		if(_internal == 0):
-			self._instance = robot_control_group(group, index)
+			self._instance = robot_control_group(control_group(int(group)), index)
 		else:
 			self._instance = _internal
 

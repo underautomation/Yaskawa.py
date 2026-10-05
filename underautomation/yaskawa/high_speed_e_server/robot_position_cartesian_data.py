@@ -1,12 +1,13 @@
 from __future__ import annotations
 import typing
+from underautomation.yaskawa.common.i_cartesian_position import ICartesianPosition
 from underautomation.yaskawa.high_speed_e_server.robot_posture import RobotPosture
 from underautomation.yaskawa.high_speed_e_server.robot_position_data_type import RobotPositionDataType
 from underautomation.yaskawa.high_speed_e_server.robot_data import RobotData
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotPositionCartesianData as robot_position_cartesian_data
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotPositionDataType as robot_position_data_type
 
-class RobotPositionCartesianData(RobotData):
+class RobotPositionCartesianData(RobotData, ICartesianPosition):
 	'''Represents Cartesian position data with coordinates in millimeters and degrees. This class provides human-readable position data converted from the raw protocol values.'''
 	def __init__(self, _internal = 0):
 		if(_internal == 0):

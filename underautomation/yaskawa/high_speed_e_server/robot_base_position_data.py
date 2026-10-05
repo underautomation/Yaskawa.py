@@ -14,7 +14,7 @@ class RobotBasePositionData(RobotAxisRawData1[int]):
 		:param header: Response header containing metadata about the communication.
 		'''
 		if(_internal == 0):
-			self._instance = robot_base_position_data(header)
+			self._instance = robot_base_position_data(header._instance if header else None)
 		else:
 			self._instance = _internal
 
@@ -22,6 +22,11 @@ class RobotBasePositionData(RobotAxisRawData1[int]):
 	def data_type(self) -> RobotBasePositionType:
 		'''Gets the data type indicating whether values are pulse or coordinate values.'''
 		return RobotBasePositionType(int(self._instance.DataType))
+
+	@property
+	def is_defined(self) -> bool:
+		'''Gets whether the variable is taught on the controller. False for a variable read with read_base_position() that is not defined: its values are then all 0.'''
+		return self._instance.IsDefined
 
 	def __str__(self):
 		return self._instance.ToString() if self._instance is not None else ""

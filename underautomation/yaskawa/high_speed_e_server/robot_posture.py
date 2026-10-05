@@ -32,7 +32,7 @@ class RobotPosture:
 		:param wAxis: W-axis angle range configuration.
 		'''
 		if(_internal == 0):
-			self._instance = robot_posture(orientation, arm, flip, rAxis, tAxis, sAxis, redundant, regardedReversePositionSpecified, lAxis, uAxis, bAxis, eAxis, wAxis)
+			self._instance = robot_posture(orientation_flip_information(int(orientation)), arm_flip_information(int(arm)), flip_no_flip_information(int(flip)), axis_flip_information(int(rAxis)), axis_flip_information(int(tAxis)), axis_flip_information(int(sAxis)), orientation_flip_information(int(redundant)), regarded_reverse_position_specified(int(regardedReversePositionSpecified)), axis_flip_information(int(lAxis)), axis_flip_information(int(uAxis)), axis_flip_information(int(bAxis)), axis_flip_information(int(eAxis)), axis_flip_information(int(wAxis)))
 		else:
 			self._instance = _internal
 
@@ -51,12 +51,6 @@ class RobotPosture:
 		:returns: A new RobotPosture instance.
 		'''
 		return RobotPosture(None, None, None, None, None, None, None, None, None, None, None, None, None, robot_posture.FromInteger(value))
-
-	def get_hash_code(self) -> int:
-		return self._instance.GetHashCode()
-
-	def equals(self, obj: typing.Any) -> bool:
-		return self._instance.Equals(obj)
 
 	@property
 	def form(self) -> int:

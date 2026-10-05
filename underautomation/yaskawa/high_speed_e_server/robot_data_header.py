@@ -3,7 +3,7 @@ import typing
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotDataHeader as robot_data_header
 
 class RobotDataHeader:
-	'''Contains header information extracted from a High Speed Ethernet Server response packet. Provides metadata about the communication including source address, data size, and transfer status.'''
+	'''Information about a response of the robot controller: the controller that answered, the size of the data, and the state of a transfer in several parts.'''
 	def __init__(self, _internal = 0):
 		if(_internal == 0):
 			self._instance = robot_data_header()
@@ -17,17 +17,17 @@ class RobotDataHeader:
 
 	@property
 	def data_size(self) -> int:
-		'''Gets the size of the data payload in the response packet. Does not include the header size.'''
+		'''Gets the size, in bytes, of the data returned by the controller in this response.'''
 		return self._instance.DataSize
 
 	@property
 	def block_no(self) -> int:
-		'''Gets the block number for multi-block transfers. The most significant bit (0x80000000) indicates this is the last block. Used primarily for file transfer operations.'''
+		'''Gets the raw block number of a transfer in several parts, such as a file transfer. Use is_last_block to know if this response is the last part.'''
 		return self._instance.BlockNo
 
 	@property
 	def is_last_block(self) -> bool:
-		'''Gets a value indicating whether this is the last block in a multi-block transfer. Returns true when the MSB of BlockNo is set (0x80000000).'''
+		'''Gets a value indicating whether this response is the last part of a transfer in several parts.'''
 		return self._instance.IsLastBlock
 
 	def __str__(self):

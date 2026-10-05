@@ -16,7 +16,7 @@ class RobotPositionData1(RobotAxisRawData1[T], typing.Generic[T]):
 		:param header: Response header containing metadata about the communication.
 		'''
 		if(_internal == 0):
-			self._instance = robot_position_data_1(header)
+			self._instance = robot_position_data_1(header._instance if header else None)
 		else:
 			self._instance = _internal
 
@@ -55,6 +55,11 @@ class RobotPositionData1(RobotAxisRawData1[T], typing.Generic[T]):
 	@user_coordinate_number.setter
 	def user_coordinate_number(self, value: int):
 		self._instance.UserCoordinateNumber = value
+
+	@property
+	def is_defined(self) -> bool:
+		'''Gets whether the variable is taught on the controller. False for a variable read with read_position_variable() that is not defined: its values are then all 0.'''
+		return self._instance.IsDefined
 
 	def __str__(self):
 		return self._instance.ToString() if self._instance is not None else ""

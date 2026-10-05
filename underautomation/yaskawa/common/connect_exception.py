@@ -17,7 +17,7 @@ class ConnectException:
 
 	@property
 	def address(self) -> str:
-		'''Address of the robot (IP:port or serial port name)'''
+		'''Address of the robot (IP:port)'''
 		return self._instance.Address
 
 	def __str__(self):

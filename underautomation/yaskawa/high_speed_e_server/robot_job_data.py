@@ -1,9 +1,10 @@
 from __future__ import annotations
 import typing
+from underautomation.yaskawa.common.i_job_data import IJobData
 from underautomation.yaskawa.high_speed_e_server.robot_data import RobotData
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotJobData as robot_job_data
 
-class RobotJobData(RobotData):
+class RobotJobData(RobotData, IJobData):
 	'''Contains information about the currently executing job (program) on the robot controller. Retrieved using the executing job information reading command.'''
 	def __init__(self, _internal = 0):
 		if(_internal == 0):

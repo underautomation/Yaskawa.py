@@ -1,9 +1,10 @@
 from __future__ import annotations
 import typing
+from underautomation.yaskawa.common.i_status_data import IStatusData
 from underautomation.yaskawa.high_speed_e_server.robot_data import RobotData
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotStatusData as robot_status_data
 
-class RobotStatusData(RobotData):
+class RobotStatusData(RobotData, IStatusData):
 	'''Contains the current operational status of the robot controller. Provides information about the robot's mode, running state, and safety conditions. Retrieved using the status information reading command.'''
 	def __init__(self, _internal = 0):
 		if(_internal == 0):

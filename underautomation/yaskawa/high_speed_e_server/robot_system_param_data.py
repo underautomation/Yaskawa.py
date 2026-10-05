@@ -4,7 +4,7 @@ from underautomation.yaskawa.high_speed_e_server.robot_data import RobotData
 from UnderAutomation.Yaskawa.HighSpeedEServer import RobotSystemParamData as robot_system_param_data
 
 class RobotSystemParamData(RobotData):
-	'''Contains a system parameter value read from the robot controller. Retrieved using YERC command 0x039C.'''
+	'''Contains a system parameter value read from the robot controller.'''
 	def __init__(self, _internal = 0):
 		if(_internal == 0):
 			self._instance = robot_system_param_data()

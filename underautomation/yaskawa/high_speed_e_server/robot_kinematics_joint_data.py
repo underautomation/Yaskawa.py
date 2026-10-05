@@ -13,7 +13,7 @@ class RobotKinematicsJointData(RobotKinematicsPositionData):
 
 	@property
 	def axis_degrees(self) -> typing.List[float]:
-		'''Gets the 8 joint axis values converted to degrees. Each element equals the corresponding Axes value divided by 10 000.'''
+		'''Gets the 8 joint axis values converted to degrees. Each element equals the corresponding axes value divided by 10 000.'''
 		return self._instance.AxisDegrees
 
 	def __str__(self):
