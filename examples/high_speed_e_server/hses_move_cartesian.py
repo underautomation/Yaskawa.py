@@ -8,7 +8,6 @@ WARNING: This will physically move the robot. Ensure the path is clear.
 """
 import sys, os
 
-from underautomation.yaskawa.high_speed_e_server.on_off_command_type import OnOffCommandType
 from underautomation.yaskawa.high_speed_e_server.position_command_type import PositionCommandType
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
@@ -51,7 +50,7 @@ try:
 
     confirm = input(f"\nServo On and Move to X={x} Y={y} Z={z} Rx={rx} Ry={ry} Rz={rz} at {speed} %? (y/N): ").strip().lower()
     
-    robot.high_speed_e_server.servo_command(OnOffCommandType.Servo, True)
+    robot.high_speed_e_server.set_servo(True)
     
     if confirm == 'y' or confirm == '':
         print("\nMoving robot...")

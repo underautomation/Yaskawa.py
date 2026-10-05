@@ -8,7 +8,6 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from examples import connect_robot
-from underautomation.yaskawa.high_speed_e_server.on_off_command_type import OnOffCommandType
 
 print("=" * 60)
 print("  YASKAWA SDK - HSES: Servo ON/OFF Command")
@@ -27,11 +26,11 @@ try:
 
     if choice == "1":
         print("\nSending Servo ON...")
-        result = robot.high_speed_e_server.servo_command(OnOffCommandType.Servo, True)
+        result = robot.high_speed_e_server.set_servo(True)
         print("Done.")
     elif choice == "2":
         print("\nSending Servo OFF...")
-        result = robot.high_speed_e_server.servo_command(OnOffCommandType.Servo, False)
+        result = robot.high_speed_e_server.set_servo(False)
         print("Done.")
     else:
         print("Invalid choice.")

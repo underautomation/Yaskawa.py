@@ -21,6 +21,10 @@ CATEGORY_ICONS = {
 CATEGORY_DESCRIPTIONS = {
     "high_speed_e_server": "High Speed Ethernet Server - status, motion, I/O, variables, files",
     "license":             "License management - activation & status",
+    "e_server":            "Ethernet Server (TCP) - status, positions, jobs, variables, I/O",
+    "ftp":                 "FTP - list, download and upload files",
+    "http":                "HTTP - read the files of the web server",
+    "kinematics":          "Offline kinematics - forward and inverse, model of the robot",
 }
 
 # ─── Box-drawing helpers ─────────────────────────────────────────────────────

@@ -6,7 +6,6 @@ Requires the robot to be in remote mode with proper permissions.
 """
 import sys, os
 
-from underautomation.yaskawa.high_speed_e_server.on_off_command_type import OnOffCommandType
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from examples import connect_robot
@@ -32,7 +31,7 @@ try:
         start = input("\nServo On and Start the job? (y/N): ").strip().lower()
         if start == 'y' or start == '':
             print('Servo On...')
-            robot.high_speed_e_server.servo_command(OnOffCommandType.Servo, True)
+            robot.high_speed_e_server.set_servo(True)
             print(f"Servo On OK.")
             print("Starting job...")
             result = robot.high_speed_e_server.start_job()

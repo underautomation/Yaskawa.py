@@ -145,10 +145,16 @@ def setup_license():
 # ==============================================================================
 # Helper: Connect to robot
 # ==============================================================================
-def connect_robot():
+def connect_robot(e_server=False, http=False, ftp=False, ftp_user="anonymous"):
     """
     Creates a YaskawaRobot, sets up license, asks for connection settings,
     and connects via the High Speed Ethernet Server protocol.
+
+    Args:
+        e_server: Also open the Ethernet Server client (TCP 80).
+        http: Also open the HTTP client (TCP 80).
+        ftp: Also open the FTP client (TCP 21).
+        ftp_user: FTP account: "anonymous" (download only), "ftp" or "rcmaster".
 
     Returns:
         YaskawaRobot: Connected robot instance
@@ -163,8 +169,19 @@ def connect_robot():
     robot = YaskawaRobot()
     params = ConnectParameters(robot_ip)
     params.ping_before_connect = True
+    params.e_server.enable = e_server
+    params.http.enable = http
+    params.ftp.enable = ftp
+    params.ftp.ftp_user = ftp_user
 
-    print(f"\nConnecting to {robot_ip} (High Speed Ethernet Server)...")
+    protocols = ["High Speed Ethernet Server"]
+    if e_server:
+        protocols.append("Ethernet Server")
+    if http:
+        protocols.append("HTTP")
+    if ftp:
+        protocols.append(f"FTP as {ftp_user}")
+    print(f"\nConnecting to {robot_ip} ({', '.join(protocols)})...")
 
     try:
         robot.connect(params)

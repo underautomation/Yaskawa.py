@@ -10,10 +10,12 @@
 
 **UnderAutomation.Yaskawa** is a Python package that communicates with Yaskawa Motoman robot controllers
 (**YRC1000 (micro)**, **MOTOMAN NEXT**, **DX100 / DX200**, **FS100**, **ERC / XRC / MRC**) through the **High Speed Ethernet Server** (HSES) of the
-controller, over UDP. Nothing is installed on the controller, no Yaskawa option is needed.
+controller, over UDP, and through the **Ethernet Server** (TCP), the **web server** (HTTP) and the **FTP server**
+of the controller. Nothing is installed on the controller.
 
 Use it to read the status, the alarms and the positions, move the robot, select and start jobs, read and
-write variables and I/O, and transfer files, from a Python script.
+write variables and I/O, transfer files, and compute the forward and inverse kinematics of 169 robot models,
+from a Python script.
 
 - Product page: [underautomation.com/yaskawa](https://underautomation.com/yaskawa)
 - Documentation: [underautomation.com/yaskawa/documentation/get-started-python](https://underautomation.com/yaskawa/documentation/get-started-python)
@@ -86,6 +88,16 @@ robot.disconnect()
 and the ports and timeouts of the High Speed Ethernet Server (`high_speed_e_server.data_port`,
 `high_speed_e_server.data_timeout_milliseconds`...).
 
+| Protocol                   | Property of `YaskawaRobot` | Port                | Enabled by default |
+| -------------------------- | -------------------------- | ------------------- | ------------------ |
+| High Speed Ethernet Server | `high_speed_e_server`      | UDP 10040 and 10041 | Yes                |
+| Ethernet Server            | `e_server`                 | TCP 80              | No                 |
+| HTTP                       | `http`                     | TCP 80              | No                 |
+| FTP                        | `ftp`                      | TCP 21              | No                 |
+
+Enable the other protocols with `parameters.e_server.enable = True`, `parameters.http.enable = True` and
+`parameters.ftp.enable = True`.
+
 ## From .NET names to Python names
 
 The Python API is the .NET API with Python names. The [.NET documentation](https://underautomation.com/yaskawa/documentation)
@@ -106,7 +118,8 @@ Each type is in the module named after it, in snake case:
 
 ## Features
 
-Everything is reached through `robot.high_speed_e_server`.
+The sections below use the High Speed Ethernet Server, through `robot.high_speed_e_server`. The other
+protocols and the kinematics follow.
 
 ### Status and alarms
 
@@ -138,11 +151,10 @@ print(list(joints.axes))  # pulses of each axis
 The robot must be in remote mode, see "Configure the robot" below.
 
 ```python
-from underautomation.yaskawa.high_speed_e_server.on_off_command_type import OnOffCommandType
 from underautomation.yaskawa.high_speed_e_server.position_command_classification import PositionCommandClassification
 from underautomation.yaskawa.high_speed_e_server.position_command_operation_coordinate import PositionCommandOperationCoordinate
 
-robot.high_speed_e_server.servo_command(OnOffCommandType.Servo, True)
+robot.high_speed_e_server.set_servo(True)
 
 # Cartesian move: mm and degrees, speed in mm/s, in the robot coordinate system
 robot.high_speed_e_server.move_cartesian(
@@ -186,6 +198,73 @@ print(list(files))
 content = robot.high_speed_e_server.get_file("PROGRAM.JBI").content
 ```
 
+### Ethernet Server
+
+```python
+parameters = ConnectParameters("192.168.0.1")
+parameters.e_server.enable = True
+robot.connect(parameters)
+
+status = robot.e_server.get_status_information()
+alarms = robot.e_server.get_alarm_with_messages()
+tcp = robot.e_server.get_robot_cartesian_position()
+
+robot.e_server.select_job("PICK", 0)
+robot.e_server.set_servo(True)
+robot.e_server.start_job()
+completed = robot.e_server.wait_for_job_completion(60)  # blocks until the end of the job, 60 s at most
+```
+
+### FTP
+
+The `anonymous` account (default) can only download: use `ftp` to upload and delete.
+
+```python
+parameters = ConnectParameters("192.168.0.1")
+parameters.ftp.enable = True
+parameters.ftp.ftp_user = "ftp"
+robot.connect(parameters)
+
+for item in robot.ftp.get_listing("/JOB"):
+    print(item.name, item.modified)
+
+robot.ftp.download_files_to_local(["/JOB/TEST.JBI", "/DAT/VAR.DAT"], "backup")
+
+# The controller does not overwrite a job by FTP: delete it first
+if robot.ftp.file_exists("/JOB/PICK.JBI"):
+    robot.ftp.delete_file("PICK.JBI")
+robot.ftp.upload_file_from_local("PICK.JBI", None, lambda percent: print(f"{percent:.0f} %"))
+```
+
+### HTTP
+
+```python
+from underautomation.yaskawa.common.file_extension import FileExtension
+
+for file in robot.http.get_file_list(FileExtension.DAT):
+    print(file.name, file.description)
+
+job = robot.http.get_file("TEST.JBI")
+```
+
+### Offline kinematics
+
+```python
+from underautomation.yaskawa.common.dh_parameters import DhParameters
+from underautomation.yaskawa.common.joints_angles import JointsAngles
+from underautomation.yaskawa.common.cartesian_position import CartesianPosition
+from underautomation.yaskawa.kinematics.arm_kinematic_models import ArmKinematicModels
+from underautomation.yaskawa.kinematics.kinematics_utils import KinematicsUtils
+
+dh = DhParameters.from_arm_kinematic_model(ArmKinematicModels.GP7)  # or DhParameters.from_prm_file("ALL.PRM")
+
+# Joint angles in degrees (S, L, U, R, B, T) to flange position in mm and degrees
+flange = KinematicsUtils.forward_kinematics(JointsAngles(0, 0, 0, 0, -90, 0), dh)
+
+# Every joint solution for a flange position: up to 8, or 16 for the HC10 cobots
+solutions = KinematicsUtils.inverse_kinematics(CartesianPosition(400, 100, 300, 180, 0, 0), dh)
+```
+
 ## Examples
 
 The folder [`examples`](examples) contains scripts ready to run. The first run asks the IP address of the
@@ -223,9 +302,22 @@ python examples/launcher.py
 | [`hses_get_system_info.py`](examples/high_speed_e_server/hses_get_system_info.py) | Software version and name of the system. |
 | [`hses_position_error_torque.py`](examples/high_speed_e_server/hses_position_error_torque.py) | Position error and torque of each axis. |
 | [`hses_file_operations.py`](examples/high_speed_e_server/hses_file_operations.py) | Lists, downloads, uploads and deletes files. |
+| [`eserver_get_status.py`](examples/e_server/eserver_get_status.py) | Ethernet Server: status, error and alarms with their text. |
+| [`eserver_get_positions.py`](examples/e_server/eserver_get_positions.py) | Ethernet Server: joints, Cartesian position in two frames, posture, torque, encoder temperatures. |
+| [`eserver_job_list.py`](examples/e_server/eserver_job_list.py) | Ethernet Server: job list with a filter, executing job. |
+| [`eserver_read_write_variables.py`](examples/e_server/eserver_read_write_variables.py) | Ethernet Server: reads the B, I, D, R, S variables, writes a B variable. |
+| [`eserver_read_write_io.py`](examples/e_server/eserver_read_write_io.py) | Ethernet Server: reads signals, writes a network input byte. |
+| [`eserver_run_job.py`](examples/e_server/eserver_run_job.py) | Ethernet Server: selects and starts a job, waits for its end. |
+| [`ftp_list_files.py`](examples/ftp/ftp_list_files.py) | FTP: folders and files of the controller. |
+| [`ftp_download_files.py`](examples/ftp/ftp_download_files.py) | FTP: downloads the files of a pattern into a local folder. |
+| [`ftp_upload_job.py`](examples/ftp/ftp_upload_job.py) | FTP: sends a job of the PC, replaces the existing job. |
+| [`http_list_files.py`](examples/http/http_list_files.py) | HTTP: files of each type with their description. |
+| [`http_read_file.py`](examples/http/http_read_file.py) | HTTP: reads a file and saves it on the PC. |
+| [`kinematics_forward_inverse.py`](examples/kinematics/kinematics_forward_inverse.py) | Forward and inverse kinematics of a model of the catalog, offline. |
+| [`kinematics_from_robot.py`](examples/kinematics/kinematics_from_robot.py) | DH parameters read from `ALL.PRM`, joint solutions of the current position. |
 | [`license_info_example.py`](examples/license/license_info_example.py) | State of the license, and registration of a key. |
 
-The motion examples move the robot. Check the surroundings of the robot first.
+The motion examples and `eserver_run_job.py` move the robot. Check the surroundings of the robot first.
 
 ## Configure the robot
 
