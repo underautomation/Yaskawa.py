@@ -40,7 +40,7 @@ try:
         speed = float(speed_str) if speed_str else 5
 
         confirm = input(f"\nMove joints to {pulse_values} at speed {speed}%? (y/N): ").strip().lower()
-        if confirm == 'y' or confirm == '':
+        if confirm == 'y':
             print("\nMoving robot joints...")
             result = robot.high_speed_e_server.move_joints(
                 axesPulse=pulse_values,

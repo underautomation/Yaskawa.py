@@ -5,11 +5,10 @@ Read and write digital I/O signals on the robot.
 Supports various I/O types: General, Universal, External, etc.
 """
 import sys, os
-
-from underautomation.yaskawa.common.io_helpers import IoHelpers
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from examples import connect_robot
+from underautomation.yaskawa.common.io_helpers import IoHelpers
 from underautomation.yaskawa.common.io_type import IOType
 
 print("=" * 60)
@@ -63,8 +62,8 @@ try:
             print(f"\nReading {io_name} group {group}, count {count}...")
             data = robot.high_speed_e_server.read_io(io_type, group, count)
             for i, val in enumerate(data.value):
-                addr = int(IoHelpers.convert_io_group_to_bit_address(io_type, group+i, 0) / 10)
-                print(f"  #{addr:05d} = {val}")
+                first = IoHelpers.convert_io_group_to_bit_address(io_type, group + i, 0)
+                print(f"  #{first:05d} to #{first + 7:05d} = {val}")
 
         elif choice == "2":
             print("\nWrite Network Input (via write_io_network_input)")

@@ -29,7 +29,7 @@ try:
         print(f"Selected.")
 
         start = input("\nServo On and Start the job? (y/N): ").strip().lower()
-        if start == 'y' or start == '':
+        if start == 'y':
             print('Servo On...')
             robot.high_speed_e_server.set_servo(True)
             print(f"Servo On OK.")

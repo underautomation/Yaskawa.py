@@ -1,7 +1,7 @@
 """
 HSES - Read and Write Real Variables
 ======================================
-Read and write real (floating point) variables (D variables) on the robot.
+Read and write real (floating point) variables (R variables) on the robot.
 """
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -33,7 +33,7 @@ try:
             print(f"\nReading real variables {start} to {start + count - 1}...")
             data = robot.high_speed_e_server.read_real(start, count)
             for i, val in enumerate(data.value, start=start):
-                print(f"  D[{i}] = {val}")
+                print(f"  R[{i}] = {val}")
 
         elif choice == "2":
             idx_str = input("Variable index: ").strip()
@@ -41,7 +41,7 @@ try:
                 continue
             idx = int(idx_str)
 
-            val_str = input(f"Value for D[{idx}] (comma-separated for multiple): ").strip()
+            val_str = input(f"Value for R[{idx}] (comma-separated for multiple): ").strip()
             if not val_str:
                 continue
 

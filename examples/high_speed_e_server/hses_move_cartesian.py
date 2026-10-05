@@ -7,11 +7,10 @@ Requires the robot to be in remote mode with servo ON.
 WARNING: This will physically move the robot. Ensure the path is clear.
 """
 import sys, os
-
-from underautomation.yaskawa.high_speed_e_server.position_command_type import PositionCommandType
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from examples import connect_robot
+from underautomation.yaskawa.high_speed_e_server.position_command_type import PositionCommandType
 from underautomation.yaskawa.high_speed_e_server.position_command_classification import PositionCommandClassification
 from underautomation.yaskawa.high_speed_e_server.position_command_operation_coordinate import PositionCommandOperationCoordinate
 
@@ -50,9 +49,8 @@ try:
 
     confirm = input(f"\nServo On and Move to X={x} Y={y} Z={z} Rx={rx} Ry={ry} Rz={rz} at {speed} %? (y/N): ").strip().lower()
     
-    robot.high_speed_e_server.set_servo(True)
-    
-    if confirm == 'y' or confirm == '':
+    if confirm == 'y':
+        robot.high_speed_e_server.set_servo(True)
         print("\nMoving robot...")
         result = robot.high_speed_e_server.move_cartesian(
             x=x, y=y, z=z,

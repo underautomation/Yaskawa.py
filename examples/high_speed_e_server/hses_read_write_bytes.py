@@ -41,14 +41,11 @@ try:
                 continue
             idx = int(idx_str)
 
-            val_str = input(f"Values for B[{idx}] (0-255, comma-separated, must be even count e.g. 0,255): ").strip()
+            val_str = input(f"Values for B[{idx}] (0-255, comma-separated, e.g. 0,255): ").strip()
             if not val_str:
                 continue
 
             values = [int(v.strip()) for v in val_str.split(",")]
-            if len(values) % 2 != 0:
-                print(f"  Error: you entered {len(values)} value(s), but the count must be even (2, 4, 6, ...).")
-                continue
             print(f"\nWriting {values} at index {idx}...")
             result = robot.high_speed_e_server.write_byte(idx, values)
             print("Done.")

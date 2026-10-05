@@ -22,7 +22,7 @@ license_info = setup_license()
 
 # Display detailed license properties
 print("\nDetailed license properties:")
-print(f"  State              : {license_info.state}")
+print(f"  State              : {license_info.state.name}")
 print(f"  Licensee           : {license_info.licensee}")
 print(f"  Product            : {license_info.product}")
 print(f"  License key        : {license_info.license_key}")

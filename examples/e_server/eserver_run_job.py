@@ -9,6 +9,7 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from examples import connect_robot
+from underautomation.yaskawa.yaskawa_robot import YaskawaRobot  # loads the .NET library
 from UnderAutomation.Yaskawa.HostControl import HostControlException
 
 print("=" * 60)

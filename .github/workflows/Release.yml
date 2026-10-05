@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install build pyright
+          pip install build pyright pytest
       - name: Check imports
         run: python tests/check_imports.py
       - name: Build package
