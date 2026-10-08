@@ -29,6 +29,11 @@ class CartesianPosition(ICartesianPosition):
 
 	@staticmethod
 	def from_homogeneous_matrix(matrix: typing.List[float]) -> 'CartesianPosition':
+		'''Creates a Cartesian position from a homogeneous matrix (3x4 or 4x4, translation in mm). When Ry is +90 or -90 degrees, Rx and Rz are not unique: Rz is set to 0.
+
+		:param matrix: Homogeneous matrix.
+		:returns: The Cartesian position.
+		'''
 		return CartesianPosition(None, None, None, None, None, None, cartesian_position.FromHomogeneousMatrix(matrix))
 
 	@property

@@ -44,8 +44,13 @@ class HostControlCartesianPositionData(HostControlResponse, ICartesianPosition):
 
 	@property
 	def re(self) -> float:
-		'''Gets or sets the Re (7th axis rotation) in degrees or millimeters.'''
+		'''Gets the elbow angle Re of a 7-axis robot, in degrees. On a 6-axis robot, value of the 7th axis (degrees or millimeters) when the external axes are read, 0 otherwise.'''
 		return self._instance.Re
+
+	@property
+	def tool_number(self) -> int:
+		'''Gets the tool number (0 to 63) of the position.'''
+		return self._instance.ToolNumber
 
 	@property
 	def axis8(self) -> float:
@@ -74,7 +79,7 @@ class HostControlCartesianPositionData(HostControlResponse, ICartesianPosition):
 
 	@property
 	def type(self) -> int:
-		'''Gets or sets the robot posture/configuration type. Defines arm configuration (flip, upper/lower arm, front/back, etc.).'''
+		'''Gets or sets the robot posture/configuration type. Defines arm configuration (flip, upper/lower arm, front/back, etc.). Use is_flip, is_upper_arm, is_front... to read it.'''
 		return self._instance.Type
 
 	@property

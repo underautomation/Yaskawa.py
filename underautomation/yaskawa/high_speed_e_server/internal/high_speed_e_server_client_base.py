@@ -312,7 +312,7 @@ class HighSpeedEServerClientBase(IRobotClient, IFileManager):
 		Arguments: (firstIndex, count)
 		:param type: The I/O signal category.
 		:param group: 1-based group number within the I/O type.
-		:param count: Number of bytes to read (will be rounded up to nearest even number).
+		:param count: Number of bytes to read.
 		:param firstIndex: Starting I/O index. Valid ranges: 1-512: Robot user input signal1001-1512: Robot user output signal2001-2512: External input signal2701-2956: Network input signal3001-3512: External output signal3701-3956: Network output signal4001-4160: Robot system input signal5001-5300: Robot system output signal6001-6064: Interface panel input signal7001-7999: Auxiliary relay signal8001-8128: Robot control status signal.
 		:returns: Plural data containing array of I/O byte values.
 		'''
@@ -340,7 +340,7 @@ class HighSpeedEServerClientBase(IRobotClient, IFileManager):
 		Arguments: (firstIndex, data)
 		:param type: The I/O signal category.
 		:param group: 1-based group number within the I/O type.
-		:param data: Data array to write (must contain an even number of elements).
+		:param data: Data array to write.
 		:param firstIndex: Starting I/O index. See ReadIO for valid ranges.
 		:returns: Response header indicating success.
 		'''
@@ -358,7 +358,7 @@ class HighSpeedEServerClientBase(IRobotClient, IFileManager):
 		'''Writes network input bytes to the robot controller
 
 		:param group: 1-based group number within the Network Inputs.
-		:param data: Data array to write (must contain an even number of elements).
+		:param data: Data array to write.
 		:returns: Response header indicating success.
 		'''
 		return RobotDataHeader(self._instance.WriteIoNetworkInput(group, data))
@@ -385,7 +385,7 @@ class HighSpeedEServerClientBase(IRobotClient, IFileManager):
 		'''Reads multiple byte variables (B variables) from the robot controller. Byte variables are 8-bit unsigned values used for compact data storage.
 
 		:param firstIndex: Starting byte variable index.
-		:param count: Number of bytes to read (will be rounded up to nearest even number).
+		:param count: Number of byte variables to read.
 		:returns: Plural data containing array of byte values.
 		'''
 		return RobotByteVariableData(self._instance.ReadByte(firstIndex, count))
@@ -394,7 +394,7 @@ class HighSpeedEServerClientBase(IRobotClient, IFileManager):
 		'''Writes byte variables (B variables) to the robot controller.
 
 		:param firstIndex: Starting byte variable index.
-		:param data: Data to write (must contain an even number of elements).
+		:param data: Data to write.
 		:returns: Response header indicating success.
 		'''
 		return RobotDataHeader(self._instance.WriteByte(firstIndex, data))
@@ -517,7 +517,8 @@ class HighSpeedEServerClientBase(IRobotClient, IFileManager):
 		return RobotExternalAxisVariableData(self._instance.ReadExternalPosition(firstIndex, count))
 
 	def write_external_position(self, firstIndex: int, data: typing.List[RobotAxisRawData1] | typing.List[RobotExternalAxisData]) -> RobotDataHeader:
-		'''Writes external axis variables (EX variables) to the robot controller.
+		'''Writes external axis variables (EX variables) to the robot controller using generic type. Provided for backward compatibility with existing code.
+		Writes external axis variables (EX variables) to the robot controller.
 
 		:param firstIndex: Starting external axis variable index.
 		:param data: Array of external axis position data to write.
@@ -570,7 +571,7 @@ class HighSpeedEServerClientBase(IRobotClient, IFileManager):
 		return RobotDataHeader(self._instance.MoveJoints(axesPulse, position_command_classification(int(classification)), speed, position_command_type(int(commandtype)), RobotControlGroup, StationControlGroup, tool))
 
 	def read32_bytes_char(self, firstIndex: int, count: int) -> RobotStringVariableData:
-		'''Reads multiple 32-byte string variables (S variables) from the robot controller (DX200 only). Extended string variables for longer text storage than 16-byte variants.
+		'''Reads multiple 32-byte string variables (S variables) from the robot controller. Available on the controllers that store their S variables in 32 bytes (DX200, YRC1000...). Extended string variables for longer text storage than 16-byte variants.
 
 		:param firstIndex: Starting string variable index.
 		:param count: Number of string variables to read.
@@ -596,6 +597,13 @@ class HighSpeedEServerClientBase(IRobotClient, IFileManager):
 		return RobotDataHeader(self._instance.DeleteFile(name))
 
 	def load_file(self, name: str, content: str, onLoadFileProgress: typing.Callable[[LoadFileProgress], None]=None) -> typing.List[RobotDataHeader]:
+		'''Uploads (loads) a file from the PC to the robot controller. Large files are automatically split into 479-byte chunks for transmission.
+
+		:param name: Target file name on the robot (e.g., "TEST.JBI" for a job file).
+		:param content: File content as a string (typically job file text content).
+		:param onLoadFileProgress: Optional callback for progress notifications.
+		:returns: Array of response headers for each chunk transmitted.
+		'''
 		return [RobotDataHeader(x) for x in self._instance.LoadFile(name, content, (onLoadFileProgress._instance if hasattr(onLoadFileProgress, '_instance') else high_speed_e_server_client_base.LoadFileProgressDelegate(lambda _x0: onLoadFileProgress(LoadFileProgress(_x0)))) if onLoadFileProgress else None)]
 
 	def get_file_list(self, pattern: str) -> RobotFileListData:
@@ -607,6 +615,12 @@ class HighSpeedEServerClientBase(IRobotClient, IFileManager):
 		return RobotFileListData(self._instance.GetFileList(pattern))
 
 	def get_file(self, name: str, onGetFileProgress: typing.Callable[[GetFileProgress], None]=None) -> RobotFileContentData:
+		'''Downloads (saves) a file from the robot controller to the PC. Large files are received in multiple blocks and automatically reassembled. Special use case : to download CMOS.BIN, first perform a CMOS backup using BatchDataBackup, then use GetFile with the backup file path.
+
+		:param name: File name to download from the robot (e.g., "TEST.JBI").
+		:param onGetFileProgress: Optional callback for progress notifications.
+		:returns: File content data including the file name and text content.
+		'''
 		return RobotFileContentData(self._instance.GetFile(name, (onGetFileProgress._instance if hasattr(onGetFileProgress, '_instance') else high_speed_e_server_client_base.GetFileProgressDelegate(lambda _x0: onGetFileProgress(GetFileProgress(_x0)))) if onGetFileProgress else None))
 
 	def batch_data_backup(self, file: str="/SPDRV/CMOSBK.BIN") -> RobotDataHeader:
